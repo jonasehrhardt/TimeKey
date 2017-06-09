@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class TestButton : NetworkBehaviour
 {
@@ -11,9 +12,13 @@ public class TestButton : NetworkBehaviour
     {
         Debug.Log("button clicked");
 
-        NetworkServer.Spawn(Instantiate(ball, null).gameObject);
+        var but = GameObject.Find("Button");
+        var button = but.GetComponent<Button>();
+        ColorBlock colors = button.colors;
+        colors.highlightedColor = GetComponent<Button>().colors.highlightedColor == Color.red ? Color.white : Color.red;
+        button.colors = colors;
 
-        gameObject.SetActive(!gameObject.activeSelf);
+        NetworkServer.Spawn(Instantiate(ball, null).gameObject);
     }
 
     [Command]
