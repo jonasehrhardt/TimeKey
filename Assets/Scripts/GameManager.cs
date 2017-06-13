@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager instance; //singleton!
 
     public CharacterController character;
+    public InputManager inputManager;
     private Vector3 characterStartingPosition;
     private Rigidbody characterRigidbody;
 
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
         
     void Start ()
     {
+        inputManager = new InputManager();
         characterStartingPosition = character.transform.position;
         characterRigidbody = character.GetComponent<Rigidbody>();
     }
