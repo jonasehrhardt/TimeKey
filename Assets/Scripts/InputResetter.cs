@@ -6,7 +6,9 @@ public class InputResetter : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            GameManager.instance.pcharacter.ResetSize();
             //Reset player input (!not enable!)
+            GameManager.instance.inputManager.ResetPlayerInputs();
         }
     }
 }

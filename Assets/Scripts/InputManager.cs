@@ -7,8 +7,10 @@ public class InputManager
     public string verticalAxis;
     public string horizontalAxis;
 
+    public SingleInputType currentInputPlayer0 = SingleInputType.None;
     public SingleInputType currentInputPlayer1 = SingleInputType.None;
-    public SingleInputType currentInputPlayer2 = SingleInputType.None;
+
+    private bool inputIsEnabled = false;
 
     public enum SingleInputType
     {
@@ -42,29 +44,45 @@ public class InputManager
     
     public void UpdatePlayerInput (SingleInputType input, int playerNumber)
     {
-        switch (playerNumber)
+        if (inputIsEnabled)
         {
-            case 1:
-                currentInputPlayer1 = input;
-                break;
-            case 2:
-                currentInputPlayer2 = input;
-                break;
-            default:
-                Debug.LogError("Coul not set player input.");
-                break;
+            switch (playerNumber)
+            {
+                case 0:
+                    currentInputPlayer0 = input;
+                    break;
+                case 1:
+                    currentInputPlayer1 = input;
+                    break;
+                default:
+                    Debug.LogError("Could not set player input.");
+                    break;
+            }
         }
     }
 
     public void ResetPlayerInputs ()
     {
+        currentInputPlayer0 = SingleInputType.None;
         currentInputPlayer1 = SingleInputType.None;
-        currentInputPlayer2 = SingleInputType.None;
+    }
+
+    public void EnablePlayerInput()
+    {
+        inputIsEnabled = true;
+    }
+
+    public void DisablePlayerInput()
+    {
+        inputIsEnabled = false;
     }
 
     public CombinedInputType getCurrentInput()
     {
-        switch (currentInputPlayer1)
+        Debug.Log("Player 0: " + currentInputPlayer0);
+        Debug.Log("Player 1: " + currentInputPlayer1);
+        
+        switch (currentInputPlayer0)
         {
             case SingleInputType.None:
                 switch (currentInputPlayer1)

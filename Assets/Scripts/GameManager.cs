@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance; //singleton!
 
     public CharacterController character;
+    public PassiveCharacterController pcharacter;
     public InputManager inputManager;
     private Vector3 characterStartingPosition;
     private Rigidbody characterRigidbody;
@@ -26,7 +25,10 @@ public class GameManager : MonoBehaviour
     void Start ()
     {
         inputManager = new InputManager();
-        characterStartingPosition = character.transform.position;
+        var startingPosition = GameObject.Find("BallStartingPosition").transform.position;
+        characterStartingPosition = startingPosition != null ? startingPosition : character.transform.position;
+        character.transform.position = characterStartingPosition;
+
         characterRigidbody = character.GetComponent<Rigidbody>();
     }
 		
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour
     void ResetCharacter()
     {
         character.transform.position = characterStartingPosition;
-        characterRigidbody.velocity = new Vector3(0f, 0f, 0f);
-        characterRigidbody.angularVelocity = new Vector3(0f, 0f, 0f);
+        characterRigidbody.velocity = Vector3.zero;
+        characterRigidbody.angularVelocity = Vector3.zero;
     }
 }
