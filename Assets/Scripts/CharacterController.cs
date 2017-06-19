@@ -9,14 +9,17 @@ public class CharacterController : MonoBehaviour
 
     public float jumpForce = 1f;
     public float dashForce = 1f;
+    //TODO: find better scaling ("medienwandgerecht")
+    public float normalScale = 1f;
+    public float shrinkScale = 0.666f;
+    public float doubleShrinkScale = 0.444f; 
+    
     private Rigidbody rigidBody;
 
     private decimal pastTime = 0;
-    Vector3 scale = new Vector3(1f,1f,1f);
-
+    
     void Start ()
     {
-        scale = this.gameObject.transform.localScale;
         pastTime = getTime();
         forwardMovement = new Vector3(movementSpeed, 0, 0);
         rigidBody = GetComponent<Rigidbody>();
@@ -25,8 +28,6 @@ public class CharacterController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        Transform trans = this.gameObject.transform;
-
         if (Input.GetButtonDown("Jump") || (Input.GetButtonDown("Vertical") &&  Input.GetAxisRaw("Vertical") > 0))
         {            
             rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -37,8 +38,12 @@ public class CharacterController : MonoBehaviour
             rigidBody.AddForce(Vector3.right * dashForce, ForceMode.Impulse);
         }
 
-        if (Input.GetKey(KeyCode.RightControl)|| Input.GetKey(KeyCode.C) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) trans.localScale = scale / 2;
-        else if (trans.localScale.y < 1f) trans.localScale = scale;
+        if (Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.C) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            transform.localScale = Vector3.one * shrinkScale;
+        else if (Input.GetKey(KeyCode.X))
+            transform.localScale = Vector3.one * doubleShrinkScale;
+        else if (transform.localScale.y < 1f)
+            transform.localScale = Vector3.one * normalScale;
     }
 
     decimal getTime()
