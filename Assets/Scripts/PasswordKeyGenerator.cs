@@ -4,20 +4,30 @@ using UnityEngine;
 
 public class PasswordKeyGenerator : MonoBehaviour
 {
+    [SerializeField]
+    private float _nextPasswordKeyTime;
+
+    private MyNetworkManager _networkManager;
+
     private int _passwordKey;
 
-    internal int PasswordKey { get { return _passwordKey; } }
+    private void Awake()
+    {
+        _networkManager = GameObject.Find("Network Manager").GetComponent<MyNetworkManager>();
+        UnityEngine.Assertions.Assert.IsNotNull(_networkManager, "NetworkManager is null");
+    }
 
     private void Start()
     {
-        StartCoroutine(PasswordKeyGeneratorLoop(3));
+        GeneratePasswordKey();
+        _networkManager.SetPasswordKeyText(_passwordKey.ToString());
+
+        StartCoroutine(PasswordKeyGeneratorLoop(_nextPasswordKeyTime));
     }
 
     private IEnumerator PasswordKeyGeneratorLoop(float nextPasswordKeyTime)
     {
-        float lastPasswordKeyTime = Time.time;
-        GeneratePasswordKey();
-        ShowPasswordKey();
+        float lastPasswordKeyTime = 0;
 
         while (true)
         {
@@ -25,17 +35,18 @@ public class PasswordKeyGenerator : MonoBehaviour
             {
                 lastPasswordKeyTime = Time.time;
                 GeneratePasswordKey();
-                ShowPasswordKey();
+                _networkManager.SetPasswordKeyText(_passwordKey.ToString());
+                //ShowPasswordKey();
             }
 
             yield return false;
         }
     }
 
-    private void ShowPasswordKey()
-    {
-        Debug.Log(_passwordKey);
-    }
+    //private void ShowPasswordKey()
+    //{
+    //    Debug.Log(_passwordKey);
+    //}
 
     private void GeneratePasswordKey()
     {
