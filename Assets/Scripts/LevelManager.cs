@@ -8,8 +8,8 @@ using UnityEditor.VersionControl;
 public class LevelManager : MonoBehaviour {
 
     public GameObject startStage;
-    public int minLevelSize = 10;
-    public int maxLevelSize = 20;
+    public int minStages = 10;
+    public int maxStages = 20;
 
     private List<GameObject> stages;
     private GameObject lastStage;
@@ -45,7 +45,7 @@ public class LevelManager : MonoBehaviour {
 
         lastStage = startStage;
 
-        var randomCount = Random.Range(minLevelSize, maxLevelSize);
+        var randomCount = Random.Range(minStages, maxStages);
         for (int i=0; i<randomCount; i++) {
             GameObject stage = Instantiate(getRandomStage(), this.transform);
             stage.transform.position = lastStage.transform.position + new Vector3(20,0,0);
