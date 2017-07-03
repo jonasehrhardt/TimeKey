@@ -64,7 +64,8 @@ public class PassiveCharacterController : MonoBehaviour
     public void Jump (bool doubleJump)
     {
         var jumpFactor = doubleJump ? doubleJumpForce : jumpForce;
-        rb.AddForce(Vector3.up * jumpFactor, ForceMode.Impulse);
+
+        rb.velocity = new Vector3(0, jumpFactor, 0);
     }
 
     public void Shrink (bool doubleShrink)

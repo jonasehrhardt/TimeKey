@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor.VersionControl;
+#endif
 
 public class LevelManager : MonoBehaviour {
 
     public GameObject startStage;
+    public List<GameObject> stages;
     public int minStages = 10;
     public int maxStages = 20;
-
-    private List<GameObject> stages;
+        
     private GameObject lastStage;
 
     GameObject getRandomStage()
@@ -22,7 +26,7 @@ public class LevelManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        /*
         DirectoryInfo info = new DirectoryInfo(Application.dataPath + "/Prefabs/Level/LevelModules");
         FileInfo[] fileInfo = info.GetFiles();
         stages = new List<GameObject>();
@@ -34,27 +38,26 @@ public class LevelManager : MonoBehaviour {
             string path = "Assets/Prefabs/Level/LevelModules/" + fileInfo[i].Name;
             string name = Path.GetFileNameWithoutExtension(fileInfo[i].Name);
 
+            #if UNITY_EDITOR
             if(startStage.name != name) stages.Add((GameObject)AssetDatabase.LoadAssetAtPath(path, typeof(GameObject)));
+            #endif
+        
         }
+        */
 
-        foreach (Transform child in this.transform)
-        {
+        //Destroy everything but the starting area
+        foreach (Transform child in transform)
+        {            
             if (startStage.name != child.name) Destroy(child.gameObject);
         }
-
-
+        
         lastStage = startStage;
 
         var randomCount = Random.Range(minStages, maxStages);
         for (int i=0; i<randomCount; i++) {
-            GameObject stage = Instantiate(getRandomStage(), this.transform);
+            GameObject stage = Instantiate(getRandomStage(), transform);
             stage.transform.position = lastStage.transform.position + new Vector3(20,0,0);
             lastStage = stage;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

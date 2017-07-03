@@ -7,13 +7,13 @@ public class InputEvaluator : MonoBehaviour
         if (other.tag == "Player")
         {            
             InputManager.CombinedInputType currentInputType = GameManager.instance.inputManager.getCurrentInput();
-            Debug.Log(currentInputType);
+            //Debug.Log(currentInputType);
 
             //Do Action depending on player input
             switch (currentInputType)
             {
                 case InputManager.CombinedInputType.None:
-                    Debug.Log("...");
+                    //Debug.Log("...");
                     break;
                 case InputManager.CombinedInputType.Jump:
                     GameManager.instance.pcharacter.Jump(false);
@@ -28,8 +28,8 @@ public class InputEvaluator : MonoBehaviour
                     GameManager.instance.pcharacter.Shrink(true);
                     break;
                 case InputManager.CombinedInputType.ShrinkJump:
-                    GameManager.instance.pcharacter.Jump(false);
                     GameManager.instance.pcharacter.Shrink(false);
+                    GameManager.instance.pcharacter.Jump(false);
                     break;
             }
         }

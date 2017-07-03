@@ -79,8 +79,8 @@ public class InputManager
 
     public CombinedInputType getCurrentInput()
     {
-        Debug.Log("Player 0: " + currentInputPlayer0);
-        Debug.Log("Player 1: " + currentInputPlayer1);
+        //Debug.Log("Player 0: " + currentInputPlayer0);
+        //Debug.Log("Player 1: " + currentInputPlayer1);
         
         switch (currentInputPlayer0)
         {
