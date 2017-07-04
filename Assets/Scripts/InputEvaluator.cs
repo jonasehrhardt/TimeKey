@@ -31,6 +31,20 @@ public class InputEvaluator : MonoBehaviour
                     GameManager.instance.pcharacter.Shrink(false);
                     GameManager.instance.pcharacter.Jump(false);
                     break;
+				case InputManager.CombinedInputType.Smash:
+					GameManager.instance.pcharacter.Smash (false);
+					break;
+				case InputManager.CombinedInputType.DoubleSmash:
+					GameManager.instance.pcharacter.Smash (true);
+					break;
+				case InputManager.CombinedInputType.SmashJump:
+					GameManager.instance.pcharacter.Smash(false);
+					GameManager.instance.pcharacter.Jump(false);
+					break;
+				case InputManager.CombinedInputType.ShrinkSmash:
+					GameManager.instance.pcharacter.Smash (false);
+					GameManager.instance.pcharacter.Shrink (false);
+					break;
             }
         }
     }

@@ -21,10 +21,14 @@ public class PassiveCharacterController : MonoBehaviour
     public float shrinkScale = 0.8f;
     public float doubleShrinkScale = 0.6f;
 
+	private bool smashOn = false;
+
+
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
+		gameObject.GetComponent<TrailRenderer> ().enabled = false;
 	}
 
     private void Update()
@@ -48,6 +52,16 @@ public class PassiveCharacterController : MonoBehaviour
         {
             GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Shrink, 1);
         }
+
+		//SMASH
+		if (Input.GetKey(KeyCode.D))
+		{
+			GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Smash, 0);
+		}
+		if (Input.GetKey(KeyCode.RightArrow))
+		{
+			GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Smash, 1);
+		}
     }
 
     void FixedUpdate ()
@@ -74,8 +88,31 @@ public class PassiveCharacterController : MonoBehaviour
         transform.localScale = Vector3.one * scale;
     }
 
+	public void Smash (bool doubleSmash)
+	{
+		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = true;
+		smashOn = true;
+	}
+
     public void ResetSize()
     {
         transform.localScale = Vector3.one * normalScale;
     }
+
+	public void ResetSmash()
+	{
+		smashOn = false;
+		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = false;
+	}
+
+	public void OnTriggerEnter(Collider other)
+	{       
+		//If the one colliding have the tag prey it
+		//will get destroyed
+
+		if(other.tag == "smash" && smashOn)
+		{
+			Destroy(other.gameObject);
+		}
+	}
 }
