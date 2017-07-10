@@ -25,7 +25,12 @@ public class PassiveCharacterController : MonoBehaviour
     public float shrinkScale = 0.8f;
     public float doubleShrinkScale = 0.6f;
 
-	private bool smashOn = false;
+    [Space(10)]
+    [Header("Dash/Smash")]
+    public float dashForce = 5.5f;
+    public float doubleDashForce = 8f;
+
+    private bool smashOn = false;
     private Vector3 startPos;
 
     void Start ()
@@ -41,6 +46,7 @@ public class PassiveCharacterController : MonoBehaviour
         if(this.transform.position.y < -6)
         {
             this.transform.position = startPos; // reset
+            rb.velocity = Vector3.zero;
         }
 
         if (useAI) return;
@@ -109,7 +115,11 @@ public class PassiveCharacterController : MonoBehaviour
 	{
 		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = true;
 		smashOn = true;
-	}
+
+        var dashFactor = doubleSmash ? doubleDashForce : dashForce;
+        currentCharacterSpeed += dashFactor;
+        rb.velocity = new Vector3(0, 1.5f, 0);
+    }
 
     public void ResetSize()
     {
@@ -120,7 +130,9 @@ public class PassiveCharacterController : MonoBehaviour
 	{
 		smashOn = false;
 		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = false;
-	}
+        currentCharacterSpeed = characterSpeedNormal;
+        rb.velocity = Vector3.zero;
+    }
 
 	public void OnTriggerEnter(Collider other)
 	{       
