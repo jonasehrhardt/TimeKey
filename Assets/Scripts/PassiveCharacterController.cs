@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class PassiveCharacterController : MonoBehaviour
 {
+    public bool useAI = false;
+    public bool slowMotion = false;
+
     Rigidbody rb;
+
     [Header("Speed")]
     public float characterSpeedNormal = 5f;
     public float characterSpeedSlowed = 2f;
@@ -22,46 +26,39 @@ public class PassiveCharacterController : MonoBehaviour
     public float doubleShrinkScale = 0.6f;
 
 	private bool smashOn = false;
-
+    private Vector3 startPos;
 
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
-	}
+        startPos = this.transform.position;
+    }
 
     private void Update()
     {
-        //JUMP
-        if (Input.GetKey(KeyCode.W))
+        if(this.transform.position.y < -6)
         {
-            GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Jump, 0);
-        }
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Jump, 1);
+            this.transform.position = startPos; // reset
         }
 
-        //SHRINK
-        if (Input.GetKey(KeyCode.S))
-        {
-            GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Shrink, 0);
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Shrink, 1);
-        }
+        if (useAI) return;
 
-		//SMASH
-		if (Input.GetKey(KeyCode.D))
-		{
-			GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Smash, 0);
-		}
-		if (Input.GetKey(KeyCode.RightArrow))
-		{
-			GameManager.instance.inputManager.UpdatePlayerInput(InputManager.SingleInputType.Smash, 1);
-		}
+        InputManager.SingleInputType type1 = InputManager.SingleInputType.None;
+        InputManager.SingleInputType type2 = InputManager.SingleInputType.None;
+
+        if (Input.GetKey(KeyCode.W)) type1 = InputManager.SingleInputType.Jump;
+        if (Input.GetKey(KeyCode.S)) type1 = InputManager.SingleInputType.Shrink;
+        if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Smash;
+
+        if (Input.GetKey(KeyCode.UpArrow)) type2 = InputManager.SingleInputType.Jump;
+        if (Input.GetKey(KeyCode.DownArrow)) type2 = InputManager.SingleInputType.Shrink;
+        if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Smash;
+
+        InputManager mngr = GameManager.instance.inputManager;
+        if (type1 != InputManager.SingleInputType.None) mngr.UpdatePlayerInput(type1, 0);
+        if (type2 != InputManager.SingleInputType.None) mngr.UpdatePlayerInput(type2, 1);
     }
 
     void FixedUpdate ()
@@ -69,6 +66,26 @@ public class PassiveCharacterController : MonoBehaviour
         //Move character
         rb.velocity = new Vector3(currentCharacterSpeed, rb.velocity.y, rb.velocity.z);
 	}
+
+    public void TriggerEnter(InputManager.SingleInputType type1, InputManager.SingleInputType type2)
+    {
+        //Enable Player Input
+        GameManager.instance.inputManager.EnablePlayerInput();
+        if(slowMotion) GameManager.instance.pcharacter.SlowDown(true);
+
+        if (useAI) {
+            InputManager mngr = GameManager.instance.inputManager;
+            mngr.UpdatePlayerInput(type1, 0);
+            mngr.UpdatePlayerInput(type2, 1);
+        }
+    }
+
+    public void TriggerExit(InputManager.SingleInputType Type1, InputManager.SingleInputType Type2)
+    {
+        //Disable Player Input
+        GameManager.instance.inputManager.DisablePlayerInput();
+        if(slowMotion) GameManager.instance.pcharacter.SlowDown(false);
+    }
 
     public void SlowDown (bool slowed)
     {

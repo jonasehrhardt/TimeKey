@@ -2,13 +2,25 @@
 
 public class SlowMoField : MonoBehaviour
 {
+    static private PassiveCharacterController characterScript = null;
+    public InputManager.SingleInputType Type1;
+    public InputManager.SingleInputType Type2;
+
+    void Start()
+    {
+        if (characterScript == null)
+        {
+            GameObject character = GameObject.Find("Character");
+            characterScript = (PassiveCharacterController)character.GetComponent(typeof(PassiveCharacterController));
+        }
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            //Enable Player Input
-            GameManager.instance.inputManager.EnablePlayerInput();
-            GameManager.instance.pcharacter.SlowDown(true);
+            characterScript.TriggerEnter(Type1, Type2);
         }
     }
 
@@ -16,9 +28,7 @@ public class SlowMoField : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            //Disable Player Input
-            GameManager.instance.inputManager.DisablePlayerInput();
-            GameManager.instance.pcharacter.SlowDown(false);
+            characterScript.TriggerExit(Type1, Type2);
         }
     }
 }
