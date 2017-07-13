@@ -4,20 +4,17 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance; //singleton!
-        
+
     public PassiveCharacterController pcharacter;
     public InputManager inputManager;
     private Vector3 characterStartingPosition;
     private Rigidbody characterRigidbody;
 
-    [Space(10)]
-    public Text pointsText;
-    private string prePointsText = "Points\n";
     [HideInInspector]
     public int currentPoints = 0;
-    public Text timeText;
-    private string preTimeText = "Time\n";
     private float gameStartTime = 0;
+
+    private ServerUIController _serverUIController;
 
     private void Awake()
     {
@@ -30,8 +27,8 @@ public class GameManager : MonoBehaviour
             Destroy(instance.gameObject);
         }
     }
-        
-    void Start ()
+
+    void Start()
     {
         inputManager = new InputManager();
         var startingPosition = GameObject.Find("BallStartingPosition").transform.position;
@@ -39,9 +36,13 @@ public class GameManager : MonoBehaviour
         pcharacter.transform.position = characterStartingPosition;
 
         characterRigidbody = pcharacter.GetComponent<Rigidbody>();
+
+        GameObject serverUIObject = GameObject.FindGameObjectWithTag("ServerUI");
+        if (serverUIObject != null)
+            _serverUIController = serverUIObject.GetComponent<ServerUIController>();
     }
-		
-	void Update ()
+
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -49,22 +50,29 @@ public class GameManager : MonoBehaviour
         }
 
         //update UI
-        pointsText.text = prePointsText + currentPoints;
-        gameStartTime += Time.deltaTime;
-        timeText.text = preTimeText + gameStartTime.ToString("0.0"); //Time.realtimeSinceStartup
+        if (_serverUIController != null)
+        {
+            _serverUIController.ChangeGamePointsText(currentPoints);
+            gameStartTime += Time.deltaTime;
+            _serverUIController.ChangeGameTimeText(gameStartTime);
+        }
     }
 
     public void ResetCharacter()
     {
-        gameStartTime = 0;
-        currentPoints = 0;
+        if(_serverUIController != null)
+        {
+            _serverUIController.ChangeGamePointsText(0);
+            _serverUIController.ChangeGameTimeText(0);
+        }
+
         pcharacter.transform.position = characterStartingPosition;
         characterRigidbody.velocity = Vector3.zero;
         characterRigidbody.angularVelocity = Vector3.zero;
         pcharacter.ResetSize();
     }
 
-    public void addPointsForObstacleCompletion()
+    public void AddPointsForObstacleCompletion()
     {
         //TODO: Change points depending on speed?
         currentPoints += 1;

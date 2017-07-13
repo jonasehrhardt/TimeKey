@@ -13,12 +13,12 @@ public class ServerWaitUIController : MonoBehaviour
 
     public void SetPasswordKeyText(string passwordKey)
     {
-        _passwordKeyText.text = "Current Key\n" + passwordKey;
+        _passwordKeyText.text = "Current Key\n <color=#ff0000ff>" + passwordKey + "</color>";
     }
 
     public void ChangeWaitForConnectionsTextTo(int waitForConnectionsCount)
     {
-        _connectionsText.text = "Wait for " + waitForConnectionsCount + "\nconnections";
+        _connectionsText.text = "Wait for <color=#ff0000ff>" + waitForConnectionsCount + "</color> \nconnections";
     }
 
     private void Start()

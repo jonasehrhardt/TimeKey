@@ -57,12 +57,12 @@ public class PassiveCharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (!breakscript.isAlive())
-        {
-            timeLeft -= Time.deltaTime;
-            if (timeLeft < 0) ResetLevel();
-            return;
-        }
+        //if (!breakscript.isAlive())
+        //{
+        //    timeLeft -= Time.deltaTime;
+        //    if (timeLeft < 0) ResetLevel();
+        //    return;
+        //}
 
         if(this.transform.position.y < -6)
         {
@@ -90,7 +90,7 @@ public class PassiveCharacterController : MonoBehaviour
 
     void FixedUpdate ()
     {
-        if (!breakscript.isAlive()) return;
+        //if (!breakscript.isAlive()) return;
         //Move character
         rb.velocity = new Vector3(currentCharacterSpeed, rb.velocity.y, rb.velocity.z);
 	}
