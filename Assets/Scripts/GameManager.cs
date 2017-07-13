@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     private string preTimeText = "Time\n";
     private float gameStartTime = 0;
 
+
+
     private void Awake()
     {
         if (instance == null)
