@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     private Vector3 characterStartingPosition;
     private Rigidbody characterRigidbody;
 
+    /*
     [Space(10)]
     public Text pointsText;
     private string prePointsText = "Points\n";
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     public int currentPoints = 0;
     public Text timeText;
     private string preTimeText = "Time\n";
+    */
 
     private void Awake()
     {
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
     {
         inputManager = new InputManager();
         var startingPosition = GameObject.Find("BallStartingPosition").transform.position;
-        characterStartingPosition = startingPosition != null ? startingPosition : pcharacter.transform.position;
+        characterStartingPosition = startingPosition;
         pcharacter.transform.position = characterStartingPosition;
 
         characterRigidbody = pcharacter.GetComponent<Rigidbody>();
@@ -48,8 +50,10 @@ public class GameManager : MonoBehaviour
         }
 
         //update UI
+        /*
         pointsText.text = prePointsText + currentPoints;
         timeText.text = preTimeText + Time.realtimeSinceStartup.ToString("0.0");
+        */
     }
 
     void ResetCharacter()
@@ -63,6 +67,6 @@ public class GameManager : MonoBehaviour
     public void addPointsForObstacleCompletion()
     {
         //TODO: Change points depending on speed?
-        currentPoints += 1;
+        //currentPoints += 1;
     }
 }
