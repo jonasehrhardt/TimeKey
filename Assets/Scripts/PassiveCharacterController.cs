@@ -156,14 +156,14 @@ public class PassiveCharacterController : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
 
-	public void OnTriggerEnter(Collider other)
+	public void OnCollisionEnter(Collision collision)
 	{       
 		//If the one colliding have the tag prey it
 		//will get destroyed
 
-		if(other.tag == "smash" && smashOn)
+		if(collision.collider.tag == "Smashable" && smashOn)
 		{
-			Destroy(other.gameObject);
+			Destroy(collision.collider.gameObject);
 		}
     }
 
