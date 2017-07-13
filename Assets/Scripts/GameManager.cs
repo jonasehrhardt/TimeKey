@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public int currentPoints = 0;
     public Text timeText;
     private string preTimeText = "Time\n";
+    private float gameStartTime = 0;
 
     private void Awake()
     {
@@ -49,11 +50,14 @@ public class GameManager : MonoBehaviour
 
         //update UI
         pointsText.text = prePointsText + currentPoints;
-        timeText.text = preTimeText + Time.realtimeSinceStartup.ToString("0.0");
+        gameStartTime += Time.deltaTime;
+        timeText.text = preTimeText + gameStartTime.ToString("0.0"); //Time.realtimeSinceStartup
     }
 
-    void ResetCharacter()
+    public void ResetCharacter()
     {
+        gameStartTime = 0;
+        currentPoints = 0;
         pcharacter.transform.position = characterStartingPosition;
         characterRigidbody.velocity = Vector3.zero;
         characterRigidbody.angularVelocity = Vector3.zero;

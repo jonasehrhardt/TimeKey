@@ -31,22 +31,43 @@ public class PassiveCharacterController : MonoBehaviour
     public float doubleDashForce = 8f;
 
     private bool smashOn = false;
-    private Vector3 startPos;
+    private BreakScript breakscript;
+    private float timeLeft = 5;
 
     void Start ()
     {
+        breakscript = GetComponent<BreakScript>();
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
-        startPos = this.transform.position;
+    }
+
+    private void ResetLevel()
+    {
+        GameManager.instance.inputManager.ResetPlayerInputs();
+        GameManager.instance.inputManager.DisablePlayerInput();
+        GameManager.instance.ResetCharacter();
+
+        if (slowMotion) GameManager.instance.pcharacter.SlowDown(false);
+        ResetSmash();
+
+        timeLeft = 3;
+        breakscript.Revive();
     }
 
     private void Update()
     {
+        if (!breakscript.isAlive())
+        {
+            timeLeft -= Time.deltaTime;
+            if (timeLeft < 0) ResetLevel();
+            return;
+        }
+
         if(this.transform.position.y < -6)
         {
-            this.transform.position = startPos; // reset
-            rb.velocity = Vector3.zero;
+            ResetLevel();
+            return;
         }
 
         if (useAI) return;
@@ -69,6 +90,7 @@ public class PassiveCharacterController : MonoBehaviour
 
     void FixedUpdate ()
     {
+        if (!breakscript.isAlive()) return;
         //Move character
         rb.velocity = new Vector3(currentCharacterSpeed, rb.velocity.y, rb.velocity.z);
 	}
@@ -134,14 +156,24 @@ public class PassiveCharacterController : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
 
-	public void OnTriggerEnter(Collider other)
-	{       
-		//If the one colliding have the tag prey it
-		//will get destroyed
+    void OnCollisionEnter(Collision collision)
+    {
+        //If the one colliding have the tag prey it
+        //will get destroyed
 
-		if(other.tag == "smash" && smashOn)
-		{
-			Destroy(other.gameObject);
-		}
-	}
+        if (collision.collider.tag == "Smashable" && smashOn)
+        {
+            Destroy(collision.collider.gameObject);
+        }
+
+        if (collision.collider.tag == "Obstacle")
+        {
+            Vector3 direction = (collision.transform.position - transform.position).normalized;
+            if ((direction.x > 0 || direction.y > 0) && rb.velocity.x <= currentCharacterSpeed/5)
+            {
+                breakscript.PlayDeath();
+                rb.velocity = Vector3.zero;
+            }
+        }
+    }
 }
