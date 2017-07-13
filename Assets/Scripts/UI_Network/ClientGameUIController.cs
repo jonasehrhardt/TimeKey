@@ -15,7 +15,7 @@ public class ClientGameUIController : MonoBehaviour
         {
             var button = Instantiate(_dummyButton);
             button.SetActive(true);
-            button.transform.parent = _dummyButton.transform.parent;
+            button.transform.SetParent(_dummyButton.transform.parent);
             button.GetComponent<ClientGameButtonController>().ChangeButtonName(name);
             _buttons.Add(button);
         }

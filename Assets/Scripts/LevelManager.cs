@@ -9,13 +9,14 @@ using System.IO;
 using UnityEditor.VersionControl;
 #endif
 
-public class LevelManager : MonoBehaviour {
+public class LevelManager : MonoBehaviour
+{
 
     public GameObject startStage;
     public List<GameObject> stages;
     public int minStages = 10;
     public int maxStages = 20;
-        
+
     private GameObject lastStage;
 
     GameObject getRandomStage()
@@ -25,7 +26,8 @@ public class LevelManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         /*
         DirectoryInfo info = new DirectoryInfo(Application.dataPath + "/Prefabs/Level/LevelModules");
         FileInfo[] fileInfo = info.GetFiles();
@@ -47,16 +49,17 @@ public class LevelManager : MonoBehaviour {
 
         //Destroy everything but the starting area
         foreach (Transform child in transform)
-        {            
+        {
             if (startStage.name != child.name) Destroy(child.gameObject);
         }
-        
+
         lastStage = startStage;
 
         var randomCount = Random.Range(minStages, maxStages);
-        for (int i=0; i<randomCount; i++) {
+        for (int i = 0; i < randomCount; i++)
+        {
             GameObject stage = Instantiate(getRandomStage(), transform);
-            stage.transform.position = lastStage.transform.position + new Vector3(20,0,0);
+            stage.transform.position = lastStage.transform.position + new Vector3(20, 0, 0);
             lastStage = stage;
         }
     }

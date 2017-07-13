@@ -20,15 +20,16 @@ public class NetworkPlayerController : NetworkBehaviour
 
     public void StartClientGame()
     {
-        if (isLocalPlayer && isServer)
+        if (isServer)
         {
-            RpcStartClientGame();
+            Debug.Log("send");
+            TargetStartClientGame(connectionToClient);
         }
     }
 
     public void StopClientGame()
     {
-        if (isLocalPlayer && isServer)
+        if (isServer)
         {
             RpcStopClientGame();
         }
@@ -58,13 +59,15 @@ public class NetworkPlayerController : NetworkBehaviour
         if (_clientUIController != null)
         {
             _clientUIController.HideClientConnectionUI();
-            _clientUIController.HideClientWaitUI();
+            _clientUIController.ShowClientWaitUI();
         }
     }
 
-    [ClientRpc]
-    public void RpcStartClientGame()
+    [TargetRpc]
+    public void TargetStartClientGame(NetworkConnection conn)
     {
+        Debug.Log("start");
+
         if (_clientUIController != null)
         {
             _clientUIController.HideClientWaitUI();
@@ -76,8 +79,6 @@ public class NetworkPlayerController : NetworkBehaviour
     [ClientRpc]
     public void RpcStopClientGame()
     {
-        // TODO hier checken. Ui wird nciht angezeigt!!
-
         if (_clientUIController != null)
         {
             _clientUIController.HideClientGameUI();
@@ -90,11 +91,9 @@ public class NetworkPlayerController : NetworkBehaviour
         var networkManagerObject = GameObject.Find("Network Manager");
         if (networkManagerObject != null)
             _networkManager = networkManagerObject.GetComponent<MyNetworkManager>();
-        UnityEngine.Assertions.Assert.IsNotNull(_networkManager, "NetworkManager is null");
 
         var passwordGeneratorObject = GameObject.Find("PasswordKeyGenerator");
         if (passwordGeneratorObject != null)
             _passwordKeyGenerator = passwordGeneratorObject.GetComponent<PasswordKeyGenerator>();
-        UnityEngine.Assertions.Assert.IsNotNull(_passwordKeyGenerator, "PasswordKeyGenerator is null");
     }
 }

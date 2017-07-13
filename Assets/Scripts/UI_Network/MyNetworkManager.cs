@@ -11,6 +11,7 @@ public class MyNetworkManager : NetworkManager
 
     private ServerUIController _serverUIController;
     private ClientUIController _clientUIController;
+    private PassiveCharacterController _passiveCharacterController;
 
     private List<NetworkConnection> _currentPlayers = new List<NetworkConnection>();
     private List<NetworkConnection> _readyPlayers = new List<NetworkConnection>();
@@ -55,8 +56,8 @@ public class MyNetworkManager : NetworkManager
         _currentPlayers.Remove(conn);
         _readyPlayers.Remove(conn);
 
-        if(_serverUIController != null)
-        _serverUIController.ChangeWaitForConnectionsTextTo(2 - _readyPlayers.Count);
+        if (_serverUIController != null)
+            _serverUIController.ChangeWaitForConnectionsTextTo(2 - _readyPlayers.Count);
 
         if (_readyPlayers.Count < 2)
         {
@@ -70,8 +71,8 @@ public class MyNetworkManager : NetworkManager
         {
             _readyPlayers.Add(conn);
 
-            if(_serverUIController != null)
-            _serverUIController.ChangeWaitForConnectionsTextTo(2 - _readyPlayers.Count);
+            if (_serverUIController != null)
+                _serverUIController.ChangeWaitForConnectionsTextTo(2 - _readyPlayers.Count);
 
             if (_readyPlayers.Count >= 2)
             {
@@ -108,21 +109,43 @@ public class MyNetworkManager : NetworkManager
             _serverUIController.ShowServerGameUI();
         }
 
+        if (_passiveCharacterController != null)
+            _passiveCharacterController.useAI = false;
+
         foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
         {
-            networkPlayer.GetComponent<NetworkPlayerController>().StartClientGame();
+            if (_readyPlayers.Exists(n => n == networkPlayer.GetComponent<NetworkPlayerController>().connectionToClient))
+            {
+                networkPlayer.GetComponent<NetworkPlayerController>().StartClientGame();
+            }
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.buildIndex == 1 && _passiveCharacterController == null)
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+                _passiveCharacterController = player.GetComponent<PassiveCharacterController>();
         }
 
-        //SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+        if (scene.buildIndex == 1 && _passiveCharacterController != null && _readyPlayers.Count < 2)
+            _passiveCharacterController.useAI = true;
+        else if (scene.buildIndex == 1 && _passiveCharacterController != null && _readyPlayers.Count >= 2)
+            _passiveCharacterController.useAI = false;
     }
 
     private void StopServerGame()
     {
-        if(_serverUIController != null)
+        if (_serverUIController != null)
         {
             _serverUIController.ShowServerWaitUI();
             _serverUIController.HideServerGameUI();
         }
+
+        if (_passiveCharacterController != null)
+            _passiveCharacterController.useAI = true;
 
         foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
         {
@@ -145,14 +168,14 @@ public class MyNetworkManager : NetworkManager
 
     private void Start()
     {
-        if(_serverUIController != null)
+        if (_serverUIController != null)
         {
             _serverUIController.ShowWaitUI();
             _serverUIController.HideServerWaitUI();
             _serverUIController.HideServerGameUI();
         }
 
-        if(_clientUIController != null)
+        if (_clientUIController != null)
         {
             _clientUIController.ShowWaitUI();
             _clientUIController.HideClientWaitUI();
@@ -161,7 +184,13 @@ public class MyNetworkManager : NetworkManager
         }
 
         if (_isHost)
+        {
             StartHost();
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+
+            SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+        }
         else
             StartClient();
     }
