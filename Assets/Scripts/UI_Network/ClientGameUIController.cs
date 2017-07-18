@@ -14,6 +14,7 @@ public class ClientGameUIController : MonoBehaviour
         foreach(string name in buttonNames)
         {
             var button = Instantiate(_dummyButton);
+            button.name = name;
             button.SetActive(true);
             button.transform.SetParent(_dummyButton.transform.parent);
             button.GetComponent<ClientGameButtonController>().ChangeButtonName(name);
@@ -36,6 +37,6 @@ public class ClientGameUIController : MonoBehaviour
     {
         _dummyButton.SetActive(false);
 
-        AddButtons("Jump", "Shrink", "Dash");
+        AddButtons("Jump", "Shrink", "Smash");
     }
 }

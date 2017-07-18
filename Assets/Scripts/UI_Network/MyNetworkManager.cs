@@ -16,6 +16,8 @@ public class MyNetworkManager : NetworkManager
     private List<NetworkConnection> _currentPlayers = new List<NetworkConnection>();
     private List<NetworkConnection> _readyPlayers = new List<NetworkConnection>();
 
+    public int ReadyPlayerCount { get { return _readyPlayers.Count; } }
+
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
@@ -110,7 +112,10 @@ public class MyNetworkManager : NetworkManager
         }
 
         if (_passiveCharacterController != null)
+        {
+            _passiveCharacterController.ResetLevel();
             _passiveCharacterController.useAI = false;
+        }
 
         foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
         {
@@ -145,14 +150,15 @@ public class MyNetworkManager : NetworkManager
         }
 
         if (_passiveCharacterController != null)
+        {
+            _passiveCharacterController.ResetLevel();
             _passiveCharacterController.useAI = true;
+        }
 
         foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
         {
             networkPlayer.GetComponent<NetworkPlayerController>().StopClientGame();
         }
-
-        //SceneManager.UnloadSceneAsync(1);
     }
 
     private void Awake()

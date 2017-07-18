@@ -10,6 +10,8 @@ public class NetworkPlayerController : NetworkBehaviour
 
     private ClientUIController _clientUIController;
 
+    private int _playerNumber;
+
     public void ProvePasswordKey(string passwordKey)
     {
         if (isLocalPlayer && !isServer && isClient)
@@ -35,20 +37,30 @@ public class NetworkPlayerController : NetworkBehaviour
         }
     }
 
+    public void SetPlayerInput(InputManager.SingleInputType type)
+    {
+        if(isLocalPlayer && !isServer && isClient)
+        {
+            CmdSetPlayerInput(_playerNumber, type);
+        }
+    }
+
     [Command]
     public void CmdProvePasswordKey(string passwordKey)
     {
         if (isServer && _passwordKeyGenerator.IsPasswordKeyCorrect(passwordKey))
         {
-            TargetPasswordKeyIsCorrect(connectionToClient);
+            TargetPasswordKeyIsCorrect(connectionToClient, _networkManager.ReadyPlayerCount);
 
             _networkManager.ClientIsReady(connectionToClient);
         }
     }
 
     [TargetRpc]
-    public void TargetPasswordKeyIsCorrect(NetworkConnection conn)
+    public void TargetPasswordKeyIsCorrect(NetworkConnection conn, int playerNumber)
     {
+        _playerNumber = playerNumber;
+
         if (_clientUIController == null)
         {
             GameObject clientUI = GameObject.FindGameObjectWithTag("ClientUI");
@@ -83,6 +95,20 @@ public class NetworkPlayerController : NetworkBehaviour
         {
             _clientUIController.HideClientGameUI();
             _clientUIController.ShowClientWaitUI();
+        }
+    }
+
+    [Command]
+    public void CmdSetPlayerInput(int playerNumber, InputManager.SingleInputType type)
+    {
+        var playerObject = GameObject.FindGameObjectWithTag("Player");
+        if(playerObject != null)
+        {
+            var passiveCharController = playerObject.GetComponent<PassiveCharacterController>();
+            if(passiveCharController != null)
+            {
+                passiveCharController.SetInputType(playerNumber, type);
+            }
         }
     }
 

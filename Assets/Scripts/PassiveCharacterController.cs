@@ -42,7 +42,7 @@ public class PassiveCharacterController : MonoBehaviour
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
     }
 
-    private void ResetLevel()
+    public void ResetLevel()
     {
         GameManager.instance.inputManager.ResetPlayerInputs();
         GameManager.instance.inputManager.DisablePlayerInput();
@@ -86,6 +86,12 @@ public class PassiveCharacterController : MonoBehaviour
         InputManager mngr = GameManager.instance.inputManager;
         if (type1 != InputManager.SingleInputType.None) mngr.UpdatePlayerInput(type1, 0);
         if (type2 != InputManager.SingleInputType.None) mngr.UpdatePlayerInput(type2, 1);
+    }
+
+    public void SetInputType(int playerNumber, InputManager.SingleInputType type)
+    {
+        if (type != InputManager.SingleInputType.None)
+            GameManager.instance.inputManager.UpdatePlayerInput(type, playerNumber);
     }
 
     void FixedUpdate ()

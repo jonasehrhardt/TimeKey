@@ -91,6 +91,35 @@ public class ClientUIController : MonoBehaviour
         }
     }
 
+    public void ButtonInput(Text buttonText)
+    {
+        if (buttonText != null)
+        {
+            InputManager.SingleInputType inputType;
+
+            switch (buttonText.text)
+            {
+                case "Jump":
+                    inputType = InputManager.SingleInputType.Jump;
+                    break;
+                case "Shrink":
+                    inputType = InputManager.SingleInputType.Shrink;
+                    break;
+                case "Smash":
+                    inputType = InputManager.SingleInputType.Smash;
+                    break;
+                default:
+                    inputType = InputManager.SingleInputType.None;
+                    break;
+            }
+
+            foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
+            {
+                networkPlayer.GetComponent<NetworkPlayerController>().SetPlayerInput(inputType);
+            }
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
