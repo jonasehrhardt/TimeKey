@@ -108,6 +108,9 @@ public class ClientUIController : MonoBehaviour
                 case "Smash":
                     inputType = InputManager.SingleInputType.Smash;
                     break;
+                case "Dash":
+                    inputType = InputManager.SingleInputType.Dash;
+                    break;
                 default:
                     inputType = InputManager.SingleInputType.None;
                     break;
