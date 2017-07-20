@@ -65,6 +65,12 @@ public class ServerUIController : MonoBehaviour
             _serverWaitUIController.ChangeWaitForConnectionsTextTo(waitForConnectionsCount);
     }
 
+    public void SetHighscore(int highscore)
+    {
+        if (_serverWaitUIController != null)
+            _serverWaitUIController.SetHighscore(highscore);
+    }
+
     public void ChangeGamePointsText(int points)
     {
         if (_serverGameUIController != null)

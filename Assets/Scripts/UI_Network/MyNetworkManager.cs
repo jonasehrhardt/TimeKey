@@ -175,7 +175,8 @@ public class MyNetworkManager : NetworkManager
 
     private void Start()
     {
-        networkAddress = "";
+        if (!_isHost)
+            networkAddress = "";
 
         if (_serverUIController != null)
         {
@@ -218,7 +219,7 @@ public class MyNetworkManager : NetworkManager
         {
             StopClient();
         }
-        else if(networkAddress != null && networkAddress != string.Empty)
+        else if (networkAddress != null && networkAddress != string.Empty)
         {
             StartClient();
         }
