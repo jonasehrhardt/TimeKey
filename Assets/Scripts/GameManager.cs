@@ -80,4 +80,9 @@ public class GameManager : MonoBehaviour
         //TODO: Change points depending on speed?
         currentPoints += 1;
     }
+
+    public void UpdatePlayerStartingPosition(Vector3 newPosition)
+    {
+        characterStartingPosition = newPosition;
+    }
 }

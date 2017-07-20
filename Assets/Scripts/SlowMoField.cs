@@ -9,6 +9,9 @@ public class SlowMoField : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            //set starting position
+
+
             GameManager.instance.pcharacter.TriggerEnter(Type1, Type2);
         }
     }
