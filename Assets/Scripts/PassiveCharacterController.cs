@@ -26,13 +26,16 @@ public class PassiveCharacterController : MonoBehaviour
     public float doubleShrinkScale = 0.6f;
 
     [Space(10)]
-    [Header("Dash/Smash")]
+    [Header("Dash")]
     public float dashForce = 5.5f;
     public float doubleDashForce = 8f;
-
-    private bool smashOn = false;
     private BreakScript breakscript;
     private float timeLeft = 5;
+
+    [Space(10)]
+    [Header("Smash")]
+    private bool smashOn = false; 
+    //Grafische Darstellung fuer Smash fehlt noch
 
     void Start ()
     {
@@ -50,6 +53,7 @@ public class PassiveCharacterController : MonoBehaviour
 
         if (slowMotion) GameManager.instance.pcharacter.SlowDown(false);
         ResetSmash();
+        ResetDash();
 
         timeLeft = 3;
         breakscript.Revive();
@@ -77,11 +81,13 @@ public class PassiveCharacterController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W)) type1 = InputManager.SingleInputType.Jump;
         if (Input.GetKey(KeyCode.S)) type1 = InputManager.SingleInputType.Shrink;
-        if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Smash;
+        if (Input.GetKey(KeyCode.A)) type1 = InputManager.SingleInputType.Smash;
+        if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Dash;
 
         if (Input.GetKey(KeyCode.UpArrow)) type2 = InputManager.SingleInputType.Jump;
         if (Input.GetKey(KeyCode.DownArrow)) type2 = InputManager.SingleInputType.Shrink;
-        if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Smash;
+        if (Input.GetKey(KeyCode.LeftArrow)) type2 = InputManager.SingleInputType.Smash;
+        if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Dash;
 
         InputManager mngr = GameManager.instance.inputManager;
         if (type1 != InputManager.SingleInputType.None) mngr.UpdatePlayerInput(type1, 0);
@@ -141,12 +147,19 @@ public class PassiveCharacterController : MonoBehaviour
 
 	public void Smash (bool doubleSmash)
 	{
-		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = true;
+		
 		smashOn = true;
+        //doubleSmash?
 
-        var dashFactor = doubleSmash ? doubleDashForce : dashForce;
+    }
+
+    public void Dash (bool doubleDash)
+    {
+        var dashFactor = doubleDash ? doubleDashForce : dashForce;
         currentCharacterSpeed += dashFactor;
         rb.velocity = new Vector3(0, 1.5f, 0);
+        GameManager.instance.pcharacter.GetComponent<TrailRenderer>().enabled = true;
+        //doubleDash?
     }
 
     public void ResetSize()
@@ -157,9 +170,14 @@ public class PassiveCharacterController : MonoBehaviour
 	public void ResetSmash()
 	{
 		smashOn = false;
-		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = false;
+		
+    }
+
+    public void ResetDash()
+    {
         currentCharacterSpeed = characterSpeedNormal;
         rb.velocity = Vector3.zero;
+        GameManager.instance.pcharacter.GetComponent<TrailRenderer>().enabled = false;
     }
 
     void OnCollisionEnter(Collision collision)

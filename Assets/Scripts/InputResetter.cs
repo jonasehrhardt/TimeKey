@@ -12,7 +12,8 @@ public class InputResetter : MonoBehaviour
 
             GameManager.instance.AddPointsForObstacleCompletion();
 
-			GameManager.instance.pcharacter.ResetSmash ();
+			GameManager.instance.pcharacter.ResetSmash();
+            GameManager.instance.pcharacter.ResetDash();
         }
     }
 }

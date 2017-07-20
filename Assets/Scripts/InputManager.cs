@@ -17,9 +17,9 @@ public class InputManager
         None,   //none
         Jump,   //up 
         Shrink, //down
-        Smash,   //right
-        Dash,
-        Wait,   //left
+        Smash,  //left
+        Dash,   //right
+        Wait,   //dead
     }
 
     public enum CombinedInputType
@@ -27,20 +27,21 @@ public class InputManager
         None,           //none + none
         Jump,           //up + none
         Shrink,         //down + none
-        Smash,           //right + none
-        Wait,           //left + none
+        Smash,          //left + none
+        Dash,           //right + none
+        Wait,           //none + none
 
         DoubleJump,     //up + up
         DoubleShrink,   //down + down
-        DoubleSmash,     //right + right
-        Invulnerable,   //left + left
+        DoubleDash,     //right + right
+        DoubleSmash,    //left + left
 
         ShrinkJump,     //up + down
-        SmashJump,       //up + right
-        HighJump,       //up + left
-        ShrinkSmash,     //down + right
-        WaitAndShrink,  //down + left
-        ChargedDash,    //left + right
+        DashJump,       //up + right
+        SmashJump,      //up + left
+        ShrinkSmash,    //down + left
+        ShrinkDash,     //down + right
+        SmashDash,    //left + right
     }
     
     public void UpdatePlayerInput (SingleInputType input, int playerNumber)
@@ -96,8 +97,8 @@ public class InputManager
                         return CombinedInputType.Shrink;
                     case SingleInputType.Smash:
                         return CombinedInputType.Smash;
-                    case SingleInputType.Wait:
-                        return CombinedInputType.Wait;
+                    case SingleInputType.Dash:
+                        return CombinedInputType.Dash;
                 }
             break;
             case SingleInputType.Jump:
@@ -111,8 +112,8 @@ public class InputManager
                         return CombinedInputType.ShrinkJump;
                     case SingleInputType.Smash:
                         return CombinedInputType.SmashJump;
-                    case SingleInputType.Wait:
-                        return CombinedInputType.HighJump;
+                    case SingleInputType.Dash:
+                        return CombinedInputType.DashJump;
                 }
                 break;
             case SingleInputType.Shrink:
@@ -126,8 +127,8 @@ public class InputManager
                         return CombinedInputType.DoubleShrink;
                     case SingleInputType.Smash:
                         return CombinedInputType.ShrinkSmash;
-                    case SingleInputType.Wait:
-                        return CombinedInputType.WaitAndShrink;
+                    case SingleInputType.Dash:
+                        return CombinedInputType.ShrinkDash;
                 }
                 break;
             case SingleInputType.Smash:
@@ -141,23 +142,23 @@ public class InputManager
                         return CombinedInputType.ShrinkSmash;
                     case SingleInputType.Smash:
                         return CombinedInputType.DoubleSmash;
-                    case SingleInputType.Wait:
-                        return CombinedInputType.ChargedDash;
+                    case SingleInputType.Dash:
+                        return CombinedInputType.SmashDash;
                 }
                 break;
-            case SingleInputType.Wait:
+            case SingleInputType.Dash:
                 switch (currentInputPlayer1)
                 {
                     case SingleInputType.None:
-                        return CombinedInputType.Wait;
+                        return CombinedInputType.Dash;
                     case SingleInputType.Jump:
-                        return CombinedInputType.HighJump;
+                        return CombinedInputType.DashJump;
                     case SingleInputType.Shrink:
-                        return CombinedInputType.WaitAndShrink;
+                        return CombinedInputType.ShrinkDash;
                     case SingleInputType.Smash:
-                        return CombinedInputType.ChargedDash;
-                    case SingleInputType.Wait:
-                        return CombinedInputType.Invulnerable;
+                        return CombinedInputType.SmashDash;
+                    case SingleInputType.Dash:
+                        return CombinedInputType.DoubleDash; 
                 }
                 break;
         }

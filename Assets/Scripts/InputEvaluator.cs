@@ -45,6 +45,24 @@ public class InputEvaluator : MonoBehaviour
 					GameManager.instance.pcharacter.Smash (false);
 					GameManager.instance.pcharacter.Shrink (false);
 					break;
+                case InputManager.CombinedInputType.Dash:
+                    GameManager.instance.pcharacter.Dash(false);
+                    break;
+                case InputManager.CombinedInputType.DoubleDash:
+                    GameManager.instance.pcharacter.Dash(true);
+                    break;
+                case InputManager.CombinedInputType.DashJump:
+                    GameManager.instance.pcharacter.Dash(false);
+                    GameManager.instance.pcharacter.Jump(false);
+                    break;
+                case InputManager.CombinedInputType.ShrinkDash:
+                    GameManager.instance.pcharacter.Dash(false);
+                    GameManager.instance.pcharacter.Shrink(false);
+                    break;
+                case InputManager.CombinedInputType.SmashDash:
+                    GameManager.instance.pcharacter.Smash(false);
+                    GameManager.instance.pcharacter.Dash(false);
+                    break;
             }
         }
     }
