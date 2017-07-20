@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetCharacter()
     {
-        if(_serverUIController != null)
+        if (_serverUIController != null)
         {
             _serverUIController.ChangeGamePointsText(0);
             _serverUIController.ChangeGameTimeText(0);
@@ -79,6 +79,9 @@ public class GameManager : MonoBehaviour
     {
         //TODO: Change points depending on speed?
         currentPoints += 1;
+
+        if (Time.timeScale < 3)
+            Time.timeScale += 0.01f;
     }
 
     public void UpdatePlayerStartingPosition(Vector3 newPosition)
