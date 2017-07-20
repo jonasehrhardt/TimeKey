@@ -51,14 +51,14 @@ public class LevelGenerator : MonoBehaviour
         }
 
         //add new obstacle behind last generated one
-        var obstacle = Instantiate(newObstacle, transform.position + Vector3.right * 20f, transform);
+        //var obstacle = Instantiate(newObstacle, transform.position + Vector3.right * 20f, transform);
         //change slowmo field width
-        Transform slowMoField = obstacle.transform.Find("Slow_Mo_Field");
+        //Transform slowMoField = obstacle.transform.Find("Slow_Mo_Field");
 
         var slowMoFieldWidth = 3f;
-        slowMoField.localScale = new Vector3(slowMoFieldWidth, 1, 1);
+        //slowMoField.localScale = new Vector3(slowMoFieldWidth, 1, 1);
 
-        var newStartingPosition = obstacle.transform.Find("InputResetter").position;
-        GameManager.instance.UpdatePlayerStartingPosition(newStartingPosition);
+        //var newStartingPosition = obstacle.transform.Find("InputResetter").position;
+        //GameManager.instance.UpdatePlayerStartingPosition(newStartingPosition);
     }
 }
