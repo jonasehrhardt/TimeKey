@@ -6,14 +6,16 @@ public class LevelGenerator : MonoBehaviour
 {
     public GameObject startingArea;
     [Header("Obstacles")]
-    public Obstacle[] easyObstacles; //only 1 input required
-    public Obstacle[] hardObstacles; //2 inputs required
+    [Tooltip("Single input and double input obstacles here")]
+    public GameObject[] easyObstacles;
+    [Tooltip("Only combo obstacles here")]
+    public GameObject[] hardObstacles;
 
-    private Obstacle[] currentLoadedObstacles;
-    private Obstacle lastObstacle;
+    private List<GameObject> currentLoadedObstacles;
+    private GameObject lastObstacle;
+
 
     [Header("Difficulty related stuff")]
-    //public int easyStartObstacles = 2; //how many easy obstacles before hard ones can appear
     [Range(0f, 1f)]
     public float maxEasyHardRatio = 0.9f;
     [Range(0f, 0.1f)]
@@ -22,7 +24,7 @@ public class LevelGenerator : MonoBehaviour
 
 	void Start ()
     {
-		
+        currentLoadedObstacles = new List<GameObject>();
 	}
 
     public void PlaceNextObstacle()
@@ -34,7 +36,7 @@ public class LevelGenerator : MonoBehaviour
         var threshold = Random.value;
         var hardObstacle = threshold < currentEasyHardRatio;
 
-        Obstacle newObstacle;
+        GameObject newObstacle;
         
         //select random obstacle from chosen list
         if (hardObstacle)
@@ -49,9 +51,14 @@ public class LevelGenerator : MonoBehaviour
         }
 
         //add new obstacle behind last generated one
-        Instantiate(newObstacle.gameObject, transform);
+        //var obstacle = Instantiate(newObstacle, transform.position + Vector3.right * 20f, transform);
         //change slowmo field width
-        //delete obstacle 1 or 2 behind
-        //move starting area in case of player death
+        //Transform slowMoField = obstacle.transform.Find("Slow_Mo_Field");
+
+        var slowMoFieldWidth = 3f;
+        //slowMoField.localScale = new Vector3(slowMoFieldWidth, 1, 1);
+
+        //var newStartingPosition = obstacle.transform.Find("InputResetter").position;
+        //GameManager.instance.UpdatePlayerStartingPosition(newStartingPosition);
     }
 }
