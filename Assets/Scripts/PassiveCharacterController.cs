@@ -33,6 +33,9 @@ public class PassiveCharacterController : MonoBehaviour
     private bool smashOn = false;
     private BreakScript breakscript;
     private float timeLeft = 5;
+    private Vector3 old_position;
+    private float updateCount = 0;
+    private float updateMax = 1;
 
     void Start ()
     {
@@ -40,10 +43,13 @@ public class PassiveCharacterController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
+        old_position = transform.position + new Vector3(-999,0,0);
     }
 
     public void ResetLevel()
     {
+        old_position = transform.position + new Vector3(-999, 0, 0);
+
         GameManager.instance.inputManager.ResetPlayerInputs();
         GameManager.instance.inputManager.DisablePlayerInput();
         GameManager.instance.ResetCharacter();
@@ -57,12 +63,12 @@ public class PassiveCharacterController : MonoBehaviour
 
     private void Update()
     {
-        //if (!breakscript.isAlive())
-        //{
-        //    timeLeft -= Time.deltaTime;
-        //    if (timeLeft < 0) ResetLevel();
-        //    return;
-        //}
+        if (!breakscript.isAlive())
+        {
+            timeLeft -= Time.deltaTime;
+            if (timeLeft < 0) ResetLevel();
+            return;
+        }
 
         if(this.transform.position.y < -6)
         {
@@ -96,7 +102,11 @@ public class PassiveCharacterController : MonoBehaviour
 
     void FixedUpdate ()
     {
-        //if (!breakscript.isAlive()) return;
+        if (!breakscript.isAlive()) return;
+
+        if (transform.position.x <= (old_position.x)) breakscript.PlayDeath();
+              old_position = transform.position;
+       
         //Move character
         rb.velocity = new Vector3(currentCharacterSpeed, rb.velocity.y, rb.velocity.z);
 	}
@@ -172,14 +182,17 @@ public class PassiveCharacterController : MonoBehaviour
             Destroy(collision.collider.gameObject);
         }
 
-        if (collision.collider.tag == "Obstacle")
+        else
         {
-            Vector3 direction = (collision.transform.position - transform.position).normalized;
-            if ((direction.x > 0 || direction.y > 0) && rb.velocity.x <= currentCharacterSpeed/5)
-            {
-                breakscript.PlayDeath();
-                rb.velocity = Vector3.zero;
-            }
+            //string materialname = collision.collider.GetComponent<MeshRenderer>().materials[0].name;
+            //if (!materialname.Contains("Ground"))
+            //{
+            //    //Vector3 direction = (collision.transform.position - transform.position).normalized;
+            //    if (rb.velocity.x <= currentCharacterSpeed / 4)
+            //    {
+            //        breakscript.PlayDeath();
+            //    }
+            //}
         }
     }
 }
