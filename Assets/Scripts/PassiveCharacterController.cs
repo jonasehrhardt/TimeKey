@@ -34,8 +34,8 @@ public class PassiveCharacterController : MonoBehaviour
     private BreakScript breakscript;
     private float timeLeft = 5;
     private Vector3 old_position;
-    private float updateCount = 0;
-    private float updateMax = 1;
+    private float timeCount_UpdatePosition = 1;
+    private float timeLeft_UpdatePosition = 0;
 
     void Start ()
     {
@@ -44,6 +44,7 @@ public class PassiveCharacterController : MonoBehaviour
         currentCharacterSpeed = characterSpeedNormal;
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
         old_position = transform.position + new Vector3(-999,0,0);
+        timeLeft_UpdatePosition = timeCount_UpdatePosition;
     }
 
     public void ResetLevel()
@@ -109,8 +110,14 @@ public class PassiveCharacterController : MonoBehaviour
         {
             if (!breakscript.isAlive()) return;
 
-            if (transform.position.x <= (old_position.x)) breakscript.PlayDeath();
-            old_position = transform.position;
+            //timeLeft_UpdatePosition -= Time.deltaTime;
+            if (timeLeft_UpdatePosition <= 0)
+            {
+                timeLeft_UpdatePosition = timeCount_UpdatePosition;
+                if (transform.position.x <= (old_position.x)) breakscript.PlayDeath();
+                old_position = transform.position;
+            }
+            else timeLeft_UpdatePosition--;
         }
        
         //Move character
