@@ -18,6 +18,7 @@ public class InputManager
         Jump,   //up 
         Shrink, //down
         Smash,   //right
+        Dash,
         Wait,   //left
     }
 

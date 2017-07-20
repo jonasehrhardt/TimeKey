@@ -37,6 +37,6 @@ public class ClientGameUIController : MonoBehaviour
     {
         _dummyButton.SetActive(false);
 
-        AddButtons("Jump", "Shrink", "Smash");
+        AddButtons("Jump", "Shrink", "Smash", "Dash");
     }
 }
