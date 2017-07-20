@@ -70,6 +70,9 @@ public class GameManager : MonoBehaviour
         characterRigidbody.velocity = Vector3.zero;
         characterRigidbody.angularVelocity = Vector3.zero;
         pcharacter.ResetSize();
+        pcharacter.ResetSmash();
+        pcharacter.ResetDash();
+        inputManager.ResetPlayerInputs();
     }
 
     public void AddPointsForObstacleCompletion()

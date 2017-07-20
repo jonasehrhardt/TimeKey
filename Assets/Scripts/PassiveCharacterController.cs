@@ -56,14 +56,15 @@ public class PassiveCharacterController : MonoBehaviour
 
         if (slowMotion) GameManager.instance.pcharacter.SlowDown(false);
         ResetSmash();
+        ResetDash();
 
         timeLeft = 3;
-        breakscript.Revive();
+        if (breakscript != null) breakscript.Revive();
     }
 
     private void Update()
     {
-        if (!breakscript.isAlive())
+        if (breakscript!=null && !breakscript.isAlive())
         {
             timeLeft -= Time.deltaTime;
             if (timeLeft < 0) ResetLevel();
@@ -83,11 +84,13 @@ public class PassiveCharacterController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W)) type1 = InputManager.SingleInputType.Jump;
         if (Input.GetKey(KeyCode.S)) type1 = InputManager.SingleInputType.Shrink;
-        if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Smash;
+        //if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Dash;
+        if (Input.GetKey(KeyCode.A)) type1 = InputManager.SingleInputType.Smash;
 
         if (Input.GetKey(KeyCode.UpArrow)) type2 = InputManager.SingleInputType.Jump;
         if (Input.GetKey(KeyCode.DownArrow)) type2 = InputManager.SingleInputType.Shrink;
-        if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Smash;
+        //if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Dash;
+        if (Input.GetKey(KeyCode.LeftArrow)) type2 = InputManager.SingleInputType.Smash;
 
         InputManager mngr = GameManager.instance.inputManager;
         if (type1 != InputManager.SingleInputType.None) mngr.UpdatePlayerInput(type1, 0);
@@ -102,10 +105,13 @@ public class PassiveCharacterController : MonoBehaviour
 
     void FixedUpdate ()
     {
-        if (!breakscript.isAlive()) return;
+        if (breakscript != null)
+        {
+            if (!breakscript.isAlive()) return;
 
-        if (transform.position.x <= (old_position.x)) breakscript.PlayDeath();
-              old_position = transform.position;
+            if (transform.position.x <= (old_position.x)) breakscript.PlayDeath();
+            old_position = transform.position;
+        }
        
         //Move character
         rb.velocity = new Vector3(currentCharacterSpeed, rb.velocity.y, rb.velocity.z);
@@ -151,9 +157,12 @@ public class PassiveCharacterController : MonoBehaviour
 
 	public void Smash (bool doubleSmash)
 	{
-		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = true;
 		smashOn = true;
+    }
 
+    public void Dash(bool doubleSmash)
+    {
+        GameManager.instance.pcharacter.GetComponent<TrailRenderer>().enabled = true;
         var dashFactor = doubleSmash ? doubleDashForce : dashForce;
         currentCharacterSpeed += dashFactor;
         rb.velocity = new Vector3(0, 1.5f, 0);
@@ -167,7 +176,11 @@ public class PassiveCharacterController : MonoBehaviour
 	public void ResetSmash()
 	{
 		smashOn = false;
-		GameManager.instance.pcharacter.GetComponent<TrailRenderer> ().enabled = false;
+    }
+
+    public void ResetDash()
+    {
+        GameManager.instance.pcharacter.GetComponent<TrailRenderer>().enabled = false;
         currentCharacterSpeed = characterSpeedNormal;
         rb.velocity = Vector3.zero;
     }
@@ -190,7 +203,7 @@ public class PassiveCharacterController : MonoBehaviour
             //    //Vector3 direction = (collision.transform.position - transform.position).normalized;
             //    if (rb.velocity.x <= currentCharacterSpeed / 4)
             //    {
-            //        breakscript.PlayDeath();
+            //       if (breakscript != null) breakscript.PlayDeath();
             //    }
             //}
         }
