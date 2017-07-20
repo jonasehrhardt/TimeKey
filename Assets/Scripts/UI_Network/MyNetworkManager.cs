@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MyNetworkManager : NetworkManager
 {
@@ -174,6 +175,8 @@ public class MyNetworkManager : NetworkManager
 
     private void Start()
     {
+        networkAddress = "";
+
         if (_serverUIController != null)
         {
             _serverUIController.ShowWaitUI();
@@ -189,16 +192,36 @@ public class MyNetworkManager : NetworkManager
             _clientUIController.HideClientGameUI();
         }
 
-        if (_isHost)
+        if (networkAddress != null && networkAddress != string.Empty)
+            if (_isHost)
+            {
+                StartHost();
+
+                SceneManager.sceneLoaded += OnSceneLoaded;
+
+                SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+            }
+            else
+                StartClient();
+    }
+
+    public void ChangeNetworkAdress(Text text)
+    {
+        networkAddress = text.text;
+
+
+    }
+
+    public void ToggleChangeNetworkAdress()
+    {
+        if (IsClientConnected())
         {
-            StartHost();
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-
-            SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+            StopClient();
         }
-        else
+        else if(networkAddress != null && networkAddress != string.Empty)
+        {
             StartClient();
+        }
     }
 
     private void Update()
