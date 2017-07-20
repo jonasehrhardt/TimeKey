@@ -84,12 +84,12 @@ public class PassiveCharacterController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W)) type1 = InputManager.SingleInputType.Jump;
         if (Input.GetKey(KeyCode.S)) type1 = InputManager.SingleInputType.Shrink;
-        //if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Dash;
+        if (Input.GetKey(KeyCode.D)) type1 = InputManager.SingleInputType.Dash;
         if (Input.GetKey(KeyCode.A)) type1 = InputManager.SingleInputType.Smash;
 
         if (Input.GetKey(KeyCode.UpArrow)) type2 = InputManager.SingleInputType.Jump;
         if (Input.GetKey(KeyCode.DownArrow)) type2 = InputManager.SingleInputType.Shrink;
-        //if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Dash;
+        if (Input.GetKey(KeyCode.RightArrow)) type2 = InputManager.SingleInputType.Dash;
         if (Input.GetKey(KeyCode.LeftArrow)) type2 = InputManager.SingleInputType.Smash;
 
         InputManager mngr = GameManager.instance.inputManager;
