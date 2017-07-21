@@ -26,16 +26,20 @@ public class PassiveCharacterController : MonoBehaviour
     public float doubleShrinkScale = 0.6f;
 
     [Space(10)]
-    [Header("Dash/Smash")]
+    [Header("Dash")]
     public float dashForce = 5.5f;
     public float doubleDashForce = 8f;
 
-    private bool smashOn = false;
     private BreakScript breakscript;
     private float timeLeft = 5;
     private Vector3 old_position;
     private float timeCount_UpdatePosition = 1;
     private float timeLeft_UpdatePosition = 0;
+
+    [Space(10)]
+    [Header("Smash")]
+    private int smashCounter = 0;
+
 
     void Start ()
     {
@@ -164,7 +168,9 @@ public class PassiveCharacterController : MonoBehaviour
 
 	public void Smash (bool doubleSmash)
 	{
-		smashOn = true;
+        smashCounter++;
+        if (doubleSmash)
+            smashCounter++;
     }
 
     public void Dash(bool doubleSmash)
@@ -182,7 +188,7 @@ public class PassiveCharacterController : MonoBehaviour
 
 	public void ResetSmash()
 	{
-		smashOn = false;
+        smashCounter = 0;
     }
 
     public void ResetDash()
@@ -197,9 +203,10 @@ public class PassiveCharacterController : MonoBehaviour
         //If the one colliding have the tag prey it
         //will get destroyed
 
-        if (collision.collider.tag == "Smashable" && smashOn)
+        if (collision.collider.tag == "Smashable"  && smashCounter > 0)
         {
             Destroy(collision.collider.gameObject);
+            smashCounter--;
         }
 
         else
