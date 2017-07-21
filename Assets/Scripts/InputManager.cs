@@ -157,7 +157,7 @@ public class InputManager
                         return CombinedInputType.ShrinkDash;
                     case SingleInputType.Smash:
                         return CombinedInputType.SmashDash;
-                    case SingleInputType.Wait:
+                    case SingleInputType.Dash:
                         return CombinedInputType.DoubleDash;
                 }
                 break;

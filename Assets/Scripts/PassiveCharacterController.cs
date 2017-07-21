@@ -176,12 +176,13 @@ public class PassiveCharacterController : MonoBehaviour
             smashCounter++;
     }
 
-    public void Dash(bool doubleSmash)
+    public void Dash(bool doubleDash)
     {
         GameManager.instance.pcharacter.GetComponent<TrailRenderer>().enabled = true;
-        var dashFactor = doubleSmash ? doubleDashForce : dashForce;
+        var dashFactor = doubleDash ? doubleDashForce : dashForce;
+        var dashHeight = doubleDash ? 3f : 1.5f;
         currentCharacterSpeed += dashFactor;
-        rb.velocity = new Vector3(0, 1.5f, 0);
+        rb.velocity = new Vector3(0, dashHeight, 0);
     }
 
     public void ResetSize()
