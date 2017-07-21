@@ -39,7 +39,9 @@ public class PassiveCharacterController : MonoBehaviour
     [Space(10)]
     [Header("Smash")]
     private int smashCounter = 0;
-
+    private GameObject[] smashObs;
+    private Object preFab;
+    private Vector3 posi;
 
     void Start ()
     {
@@ -62,6 +64,7 @@ public class PassiveCharacterController : MonoBehaviour
         if (slowMotion) GameManager.instance.pcharacter.SlowDown(false);
         ResetSmash();
         ResetDash();
+        ResetSmashObstacles();
 
         timeLeft = 3;
         if (breakscript != null) breakscript.Revive();
@@ -198,17 +201,30 @@ public class PassiveCharacterController : MonoBehaviour
         rb.velocity = Vector3.zero;
     }
 
+    public void ResetSmashObstacles()
+    {
+        if (smashObs == null)
+        {
+            smashObs = GameObject.FindGameObjectsWithTag("Respawn");
+        }
+        foreach (GameObject toBeRespawned in smashObs)
+        {
+            preFab = UnityEditor.PrefabUtility.GetPrefabParent(toBeRespawned);
+            posi = toBeRespawned.transform.localPosition;
+            Destroy(toBeRespawned);
+            GameObject dummy = (GameObject) UnityEditor.PrefabUtility.InstantiatePrefab(preFab);
+            dummy.transform.localPosition = posi;
+        }
+        smashObs = null;
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        //If the one colliding have the tag prey it
-        //will get destroyed
-
         if (collision.collider.tag == "Smashable"  && smashCounter > 0)
         {
             Destroy(collision.collider.gameObject);
             smashCounter--;
         }
-
         else
         {
             //string materialname = collision.collider.GetComponent<MeshRenderer>().materials[0].name;
