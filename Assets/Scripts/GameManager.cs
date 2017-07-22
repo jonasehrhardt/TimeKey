@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     private Rigidbody characterRigidbody;
 
     [HideInInspector]
+    public LevelGenerator levelGenerator;
+
+    [HideInInspector]
     public int currentPoints = 0;
     private float gameStartTime = 0;
 
@@ -18,6 +21,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        //Debug.Log("Awakening GameManager");
         if (instance == null)
         {
             instance = this;
@@ -30,10 +34,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
-        var startingPosition = GameObject.Find("BallStartingPosition").transform.position;
-        characterStartingPosition = startingPosition != null ? startingPosition : pcharacter.transform.position;
-        pcharacter.transform.position = characterStartingPosition;
+
+        var startingPosition = GameObject.Find("BallStartingPosition");
+        characterStartingPosition = (startingPosition != null) ? startingPosition.transform.position : pcharacter.transform.position;
 
         characterRigidbody = pcharacter.GetComponent<Rigidbody>();
 
@@ -64,6 +69,11 @@ public class GameManager : MonoBehaviour
         {
             _serverUIController.ChangeGamePointsText(0);
             _serverUIController.ChangeGameTimeText(0);
+        }
+
+        if (levelGenerator != null)
+        {
+            levelGenerator.Reset();
         }
 
         pcharacter.transform.position = characterStartingPosition;

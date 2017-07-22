@@ -4,14 +4,17 @@ public class SlowMoField : MonoBehaviour
 {
     public InputManager.SingleInputType Type1;
     public InputManager.SingleInputType Type2;
+    private bool firstTrigger = true;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            //set starting position
-
-
+            if (firstTrigger)
+            {
+                GameManager.instance.levelGenerator.PlaceNextObstacle();
+                firstTrigger = false;
+            }
             GameManager.instance.pcharacter.TriggerEnter(Type1, Type2);
         }
     }

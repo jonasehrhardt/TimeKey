@@ -12,8 +12,8 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] hardObstacles;
 
     private List<GameObject> currentLoadedObstacles;
-    private GameObject lastObstacle;
 
+    private int currentXPosition; //used to place new obstacles
 
     [Header("Difficulty related stuff")]
     [Range(0f, 1f)]
@@ -22,43 +22,84 @@ public class LevelGenerator : MonoBehaviour
     public float ratioIncreasePerObstacle = 0.05f; 
     private float currentEasyHardRatio = 0;
 
-	void Start ()
+    private void Awake()
+    {
+        GameManager.instance.levelGenerator = this;
+    }
+
+    void Start ()
     {
         currentLoadedObstacles = new List<GameObject>();
-	}
+        currentXPosition = -5;
+
+        var newStartingArea = Instantiate(startingArea, new Vector3(currentXPosition, 0, 0), Quaternion.identity, transform);
+        currentLoadedObstacles.Add(newStartingArea);
+        currentXPosition += 20;
+        PlaceNextObstacle();
+        PlaceNextObstacle();
+    }
 
     public void PlaceNextObstacle()
-    {        
+    {
+        GameObject newObstacle = GetNextObstacle();
+
+        //add new obstacle behind last generated one
+        var obstacle = Instantiate(newObstacle, new Vector3(currentXPosition, 0, 0), Quaternion.identity, transform);
+        currentXPosition += 20;
+
+        /*
+        //change slowmo field width
+        Transform slowMoField = obstacle.transform.Find("Slow_Mo_Field");
+
+        var slowMoFieldWidth = 3f; //TODO: calculate appropriate width
+        slowMoField.localScale = new Vector3(slowMoFieldWidth, 1, 1);
+        */
+        
+        if (currentLoadedObstacles.Count >= 3)
+        {
+            var obstacleToDelete = currentLoadedObstacles[0];
+            currentLoadedObstacles.RemoveAt(0);
+            Destroy(obstacleToDelete);
+        }
+        currentLoadedObstacles.Add(obstacle);
+
+        var newStartingPosition = obstacle.transform.Find("InputResetter").position;
+    }
+
+    private GameObject GetNextObstacle()
+    {
         //check for easy vs hard obstacle
         currentEasyHardRatio += ratioIncreasePerObstacle;
         currentEasyHardRatio = Mathf.Clamp(currentEasyHardRatio, 0f, maxEasyHardRatio);
 
         var threshold = Random.value;
-        var hardObstacle = threshold < currentEasyHardRatio;
+        var easyObstacle = threshold > currentEasyHardRatio;
 
-        GameObject newObstacle;
-        
+        GameObject nextObstacle;
+
         //select random obstacle from chosen list
-        if (hardObstacle)
+        if (easyObstacle)
         {
-            int randomIndex = Random.Range(0, hardObstacles.Length);
-            newObstacle = hardObstacles[randomIndex];
+            int randomIndex = Random.Range(0, easyObstacles.Length);
+            nextObstacle = easyObstacles[randomIndex];
         }
         else
         {
-            int randomIndex = Random.Range(0, easyObstacles.Length);
-            newObstacle = easyObstacles[randomIndex];
+            int randomIndex = Random.Range(0, hardObstacles.Length);
+            nextObstacle = hardObstacles[randomIndex];
         }
 
-        //add new obstacle behind last generated one
-        var obstacle = Instantiate(newObstacle, transform);
-        //change slowmo field width
-        Transform slowMoField = obstacle.transform.Find("Slow_Mo_Field");
+        return nextObstacle;
+    }
 
-        var slowMoFieldWidth = 3f;
-        slowMoField.localScale = new Vector3(slowMoFieldWidth, 1, 1);
-
-        var newStartingPosition = obstacle.transform.Find("InputResetter").position;
-        GameManager.instance.UpdatePlayerStartingPosition(newStartingPosition);
+    public void Reset()
+    {
+        //place starting area for easier reentering
+        if (currentLoadedObstacles[0].name != "StartingArea(Clone)")
+        {
+            var newStartingArea = Instantiate(startingArea, new Vector3(currentXPosition - 80, 0, 0), Quaternion.identity, transform);
+            currentLoadedObstacles.Insert(0, newStartingArea);
+            GameManager.instance.UpdatePlayerStartingPosition(newStartingArea.transform.Find("BallStartingPosition").position);
+        }
     }
 }
