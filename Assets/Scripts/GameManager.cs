@@ -19,6 +19,12 @@ public class GameManager : MonoBehaviour
 
     private ServerUIController _serverUIController;
 
+    [Header("Time")]
+    [Range(1f, 10f)]
+    public float maxTimeScale = 3;
+    [Range(0.01f, 0.1f)]
+    public float timeScaleIncrements = 0.01f;
+
     private void Awake()
     {
         //Debug.Log("Awakening GameManager");
@@ -90,8 +96,8 @@ public class GameManager : MonoBehaviour
         //TODO: Change points depending on speed?
         currentPoints += 1;
 
-        if (Time.timeScale < 3)
-            Time.timeScale += 0.01f;
+        if (Time.timeScale < maxTimeScale)
+            Time.timeScale += timeScaleIncrements;
     }
 
     public void UpdatePlayerStartingPosition(Vector3 newPosition)
