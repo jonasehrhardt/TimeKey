@@ -40,6 +40,7 @@ public class PassiveCharacterController : MonoBehaviour
     [Header("Smash")]
     private int smashCounter = 0;
     private GameObject[] smashObs;
+    private int matHelper = 0;
 
     void Start ()
     {
@@ -172,7 +173,21 @@ public class PassiveCharacterController : MonoBehaviour
 	{
         smashCounter++;
         if (doubleSmash)
+        {
             smashCounter++;
+            matHelper = 1;
+        }
+        else
+        {
+            matHelper = 0;
+        }
+        Material[] mats = this.gameObject.GetComponent<MeshRenderer>().materials;
+        Material[] mats2 = GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials;
+        Material token = mats[0];
+        mats[0] = mats2[0];
+        mats2[0] = token;
+        this.gameObject.GetComponent<MeshRenderer>().materials = mats;
+        GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials = mats2;
     }
 
     public void Dash(bool doubleDash)
@@ -192,6 +207,14 @@ public class PassiveCharacterController : MonoBehaviour
 	public void ResetSmash()
 	{
         smashCounter = 0;
+  
+        Material[] mats = this.gameObject.GetComponent<MeshRenderer>().materials;
+        Material[] mats2 = GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials;
+        Material token = mats[0];
+        mats[0] = mats2[0];
+        mats2[0] = token;
+        this.gameObject.GetComponent<MeshRenderer>().materials = mats;
+        GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials = mats2;
     }
 
     public void ResetDash()
