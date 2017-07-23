@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("High values may result in unexpected behaviour")]
     public float maxTimeScale = 3;
     [Range(0.01f, 0.1f)]
-    public float timeScaleIncrements = 0.01f;
+    public float timeScaleIncrements = 0.02f;
 
     private void Awake()
     {
