@@ -17,9 +17,8 @@ public class InputManager
         None,   //none
         Jump,   //up 
         Shrink, //down
-        Smash,   //left
+        Smash,  //left
         Dash,   //right
-        Wait,   //left
     }
 
     public enum CombinedInputType

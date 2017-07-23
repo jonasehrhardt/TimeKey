@@ -10,11 +10,6 @@ public class SlowMoField : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            if (firstTrigger && GameManager.instance.levelGenerator != null)
-            {
-                GameManager.instance.levelGenerator.PlaceNextObstacle();
-                firstTrigger = false;
-            }
             GameManager.instance.pcharacter.TriggerEnter(Type1, Type2);
         }
     }

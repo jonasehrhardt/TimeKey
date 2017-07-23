@@ -24,7 +24,7 @@ public class LevelGenerator : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.instance.levelGenerator = this;
+        //GameManager.instance.levelGenerator = this;
     }
 
     void Start ()

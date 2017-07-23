@@ -40,9 +40,8 @@ public class PassiveCharacterController : MonoBehaviour
     [Header("Smash")]
     private int smashCounter = 0;
     private GameObject[] smashObs;
-    private int matHelper = 0;
     private MeshRenderer meshRenderer;
-    public Material[] smashMaterials;
+    public Material[] smashMaterials; //[0] normal, [1] single dash, [2] double dash
 
     void Start ()
     {

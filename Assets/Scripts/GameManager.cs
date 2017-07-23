@@ -12,9 +12,6 @@ public class GameManager : MonoBehaviour
     private Rigidbody characterRigidbody;
 
     [HideInInspector]
-    public LevelGenerator levelGenerator;
-
-    [HideInInspector]
     public int currentPoints = 0;
     private float gameStartTime = 0;
 
@@ -78,21 +75,6 @@ public class GameManager : MonoBehaviour
             _serverUIController.ChangeGamePointsText(0);
             _serverUIController.ChangeGameTimeText(0);
         }
-
-        if (levelGenerator != null)
-        {
-            levelGenerator.Reset();
-        }
-
-        /*
-        pcharacter.transform.position = characterStartingPosition;
-        characterRigidbody.velocity = Vector3.zero;
-        characterRigidbody.angularVelocity = Vector3.zero;
-        pcharacter.ResetSize();
-        pcharacter.ResetSmash();
-        pcharacter.ResetDash();
-        inputManager.ResetPlayerInputs();
-        */
 
         pcharacter.ResetCharacter();
     }
