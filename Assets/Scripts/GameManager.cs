@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public int currentPoints = 0;
     private float gameStartTime = 0;
+    private int _highscore;
 
     private ServerUIController _serverUIController;
 
@@ -50,6 +51,11 @@ public class GameManager : MonoBehaviour
         GameObject serverUIObject = GameObject.FindGameObjectWithTag("ServerUI");
         if (serverUIObject != null)
             _serverUIController = serverUIObject.GetComponent<ServerUIController>();
+
+        if (PlayerPrefs.HasKey("highscore"))
+            _highscore = PlayerPrefs.GetInt("highscore");
+        else
+            _highscore = 0;
     }
 
     void Update()
@@ -65,6 +71,7 @@ public class GameManager : MonoBehaviour
             _serverUIController.ChangeGamePointsText(currentPoints);
             gameStartTime += Time.deltaTime;
             _serverUIController.ChangeGameTimeText(gameStartTime);
+            _serverUIController.SetHighscore(_highscore);
         }
     }
 
@@ -77,6 +84,12 @@ public class GameManager : MonoBehaviour
         }
 
         pcharacter.ResetCharacter();
+
+        if(currentPoints > _highscore)
+        {
+            _highscore = currentPoints;
+            PlayerPrefs.SetInt("highscore", _highscore);
+        }
     }
 
     public void AddPointsForObstacleCompletion()
