@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
 
     public PassiveCharacterController pcharacter;
     public InputManager inputManager;
-    private Vector3 characterStartingPosition;
+    [HideInInspector]
+    public Vector3 characterStartingPosition;
     private Rigidbody characterRigidbody;
 
     [HideInInspector]
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Time")]
     [Range(1f, 10f)]
+    [Tooltip("High values may result in unexpected behaviour")]
     public float maxTimeScale = 3;
     [Range(0.01f, 0.1f)]
     public float timeScaleIncrements = 0.01f;
@@ -57,7 +59,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            ResetCharacter();
+            ResetLevel();
         }
 
         //update UI
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ResetCharacter()
+    public void ResetLevel()
     {
         if (_serverUIController != null)
         {
@@ -82,6 +84,7 @@ public class GameManager : MonoBehaviour
             levelGenerator.Reset();
         }
 
+        /*
         pcharacter.transform.position = characterStartingPosition;
         characterRigidbody.velocity = Vector3.zero;
         characterRigidbody.angularVelocity = Vector3.zero;
@@ -89,6 +92,9 @@ public class GameManager : MonoBehaviour
         pcharacter.ResetSmash();
         pcharacter.ResetDash();
         inputManager.ResetPlayerInputs();
+        */
+
+        pcharacter.ResetCharacter();
     }
 
     public void AddPointsForObstacleCompletion()

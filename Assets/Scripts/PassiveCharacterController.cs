@@ -55,21 +55,27 @@ public class PassiveCharacterController : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    public void ResetLevel()
+    public void ResetCharacter()
     {
         old_position = transform.position + new Vector3(-999, 0, 0);
 
         GameManager.instance.inputManager.ResetPlayerInputs();
         GameManager.instance.inputManager.DisablePlayerInput();
-        GameManager.instance.ResetCharacter();
 
-        if (slowMotion) GameManager.instance.pcharacter.SlowDown(false);
+        transform.position = GameManager.instance.characterStartingPosition;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        ResetSize();
         ResetSmash();
         ResetDash();
+
+        if (slowMotion)
+            GameManager.instance.pcharacter.SlowDown(false);
         ResetSmashObstacles();
 
         timeLeft = 3;
-        if (breakscript != null) breakscript.Revive();
+        if (breakscript != null)
+            breakscript.Revive();
     }
 
     private void Update()
@@ -77,13 +83,13 @@ public class PassiveCharacterController : MonoBehaviour
         if (breakscript!=null && !breakscript.isAlive())
         {
             timeLeft -= Time.deltaTime;
-            if (timeLeft < 0) ResetLevel();
+            if (timeLeft < 0) ResetCharacter();
             return;
         }
 
         if(this.transform.position.y < -6)
         {
-            ResetLevel();
+            ResetCharacter();
             return;
         }
 

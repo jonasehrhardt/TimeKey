@@ -4,7 +4,7 @@ public class InputEvaluator : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger Enter");
+        //Debug.Log("Trigger Enter");
         if (other.tag == "Player")
         {            
             InputManager.CombinedInputType currentInputType = GameManager.instance.inputManager.getCurrentInput();

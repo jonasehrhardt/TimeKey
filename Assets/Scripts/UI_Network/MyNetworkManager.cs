@@ -114,7 +114,7 @@ public class MyNetworkManager : NetworkManager
 
         if (_passiveCharacterController != null)
         {
-            _passiveCharacterController.ResetLevel();
+            _passiveCharacterController.ResetCharacter();
             _passiveCharacterController.useAI = false;
         }
 
@@ -152,7 +152,7 @@ public class MyNetworkManager : NetworkManager
 
         if (_passiveCharacterController != null)
         {
-            _passiveCharacterController.ResetLevel();
+            _passiveCharacterController.ResetCharacter();
             _passiveCharacterController.useAI = true;
         }
 
