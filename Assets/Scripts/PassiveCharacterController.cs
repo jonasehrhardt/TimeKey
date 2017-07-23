@@ -30,18 +30,21 @@ public class PassiveCharacterController : MonoBehaviour
     public float dashForce = 5.5f;
     public float doubleDashForce = 8f;
 
-    private BreakScript breakscript;
-    private float timeLeft = 5;
-    private Vector3 old_position;
-    private float timeCount_UpdatePosition = 1;
-    private float timeLeft_UpdatePosition = 0;
-
     [Space(10)]
     [Header("Smash")]
     private int smashCounter = 0;
     private GameObject[] smashObs;
     private MeshRenderer meshRenderer;
     public Material[] smashMaterials; //[0] normal, [1] single dash, [2] double dash
+
+    [Space(10)]
+    [Header("DeathTimer")]
+    public float deathTimer = 3;
+    private float timeDeath = 0;
+    private BreakScript breakscript;
+    private Vector3 old_position;
+    private float timeCount_UpdatePosition = 1;
+    private float timeLeft_UpdatePosition = 0;
 
     void Start ()
     {
@@ -72,7 +75,7 @@ public class PassiveCharacterController : MonoBehaviour
             GameManager.instance.pcharacter.SlowDown(false);
         ResetSmashObstacles();
 
-        timeLeft = 3;
+        timeDeath = 0;
         if (breakscript != null)
             breakscript.Revive();
     }
@@ -81,14 +84,14 @@ public class PassiveCharacterController : MonoBehaviour
     {
         if (breakscript!=null && !breakscript.isAlive())
         {
-            timeLeft -= Time.deltaTime;
-            if (timeLeft < 0) ResetCharacter();
+            timeDeath += Time.deltaTime;
+            if (timeDeath > deathTimer) GameManager.instance.ResetLevel();
             return;
         }
 
         if(this.transform.position.y < -6)
         {
-            ResetCharacter();
+            GameManager.instance.ResetLevel();
             return;
         }
 
