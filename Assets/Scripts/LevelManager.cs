@@ -14,8 +14,7 @@ public class LevelManager : MonoBehaviour
 
     public GameObject startStage;
     public List<GameObject> stages;
-    public int minStages = 10;
-    public int maxStages = 20;
+    public int obstacles = 99;
 
     private GameObject lastStage;
 
@@ -54,9 +53,8 @@ public class LevelManager : MonoBehaviour
         }
 
         lastStage = startStage;
-
-        var randomCount = Random.Range(minStages, maxStages);
-        for (int i = 0; i < randomCount; i++)
+                
+        for (int i = 0; i < obstacles; i++)
         {
             GameObject stage = Instantiate(getRandomStage(), transform);
             stage.transform.position = lastStage.transform.position + new Vector3(20, 0, 0);
