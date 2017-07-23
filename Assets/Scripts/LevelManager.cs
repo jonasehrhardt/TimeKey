@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public GameObject startStage;
+    public GameObject startStagePrefab;
     public List<GameObject> obstaclePrefabs;
     public int obstaclesToLoadAtStart = 500;
 
@@ -22,10 +22,16 @@ public class LevelManager : MonoBehaviour
         //Destroy everything but the starting area
         foreach (Transform child in transform)
         {
-            if (startStage.name != child.name) Destroy(child.gameObject);
+            if (startStagePrefab.name != child.name)
+            {
+                Destroy(child.gameObject);
+            }
+            else
+            {
+                //assumes there always is a start stage in the scene already
+                lastStage = child.gameObject;
+            }
         }
-
-        lastStage = startStage;
                 
         for (int i = 0; i < obstaclesToLoadAtStart; i++)
         {
