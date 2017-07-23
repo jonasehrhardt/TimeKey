@@ -40,8 +40,6 @@ public class PassiveCharacterController : MonoBehaviour
     [Header("Smash")]
     private int smashCounter = 0;
     private GameObject[] smashObs;
-    private Object preFab;
-    private Vector3 posi;
 
     void Start ()
     {
@@ -51,6 +49,7 @@ public class PassiveCharacterController : MonoBehaviour
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
         old_position = transform.position + new Vector3(-999,0,0);
         timeLeft_UpdatePosition = timeCount_UpdatePosition;
+
     }
 
     public void ResetLevel()
@@ -206,24 +205,22 @@ public class PassiveCharacterController : MonoBehaviour
     {
         if (smashObs == null)
         {
-            smashObs = GameObject.FindGameObjectsWithTag("Respawn");
+            smashObs = GameObject.FindGameObjectsWithTag("Smashable");
         }
         foreach (GameObject toBeRespawned in smashObs)
         {
-            preFab = UnityEditor.PrefabUtility.GetPrefabParent(toBeRespawned);
-            posi = toBeRespawned.transform.localPosition;
-            Destroy(toBeRespawned);
-            GameObject dummy = (GameObject) UnityEditor.PrefabUtility.InstantiatePrefab(preFab);
-            dummy.transform.localPosition = posi;
+            toBeRespawned.GetComponent<BoxCollider>().enabled = true;
+            toBeRespawned.GetComponent<MeshRenderer>().enabled = true;
         }
-        smashObs = null;
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag == "Smashable"  && smashCounter > 0)
         {
-            Destroy(collision.collider.gameObject);
+            collision.collider.gameObject.GetComponent<BoxCollider>().enabled = false;
+            collision.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
+
             smashCounter--;
         }
         else
