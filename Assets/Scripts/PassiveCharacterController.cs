@@ -41,6 +41,8 @@ public class PassiveCharacterController : MonoBehaviour
     private int smashCounter = 0;
     private GameObject[] smashObs;
     private int matHelper = 0;
+    private MeshRenderer meshRenderer;
+    public Material[] smashMaterials;
 
     void Start ()
     {
@@ -50,7 +52,7 @@ public class PassiveCharacterController : MonoBehaviour
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
         old_position = transform.position + new Vector3(-999,0,0);
         timeLeft_UpdatePosition = timeCount_UpdatePosition;
-
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     public void ResetLevel()
@@ -175,19 +177,14 @@ public class PassiveCharacterController : MonoBehaviour
         if (doubleSmash)
         {
             smashCounter++;
-            matHelper = 1;
+            //matHelper = 1;
+            meshRenderer.material = smashMaterials[2];
         }
         else
         {
-            matHelper = 0;
+            //matHelper = 0;
+            meshRenderer.material = smashMaterials[1];
         }
-        Material[] mats = this.gameObject.GetComponent<MeshRenderer>().materials;
-        Material[] mats2 = GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials;
-        Material token = mats[0];
-        mats[0] = mats2[0];
-        mats2[0] = token;
-        this.gameObject.GetComponent<MeshRenderer>().materials = mats;
-        GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials = mats2;
     }
 
     public void Dash(bool doubleDash)
@@ -207,14 +204,8 @@ public class PassiveCharacterController : MonoBehaviour
 	public void ResetSmash()
 	{
         smashCounter = 0;
-  
-        Material[] mats = this.gameObject.GetComponent<MeshRenderer>().materials;
-        Material[] mats2 = GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials;
-        Material token = mats[0];
-        mats[0] = mats2[0];
-        mats2[0] = token;
-        this.gameObject.GetComponent<MeshRenderer>().materials = mats;
-        GameObject.FindGameObjectsWithTag("Respawn")[matHelper].GetComponent<MeshRenderer>().materials = mats2;
+
+        meshRenderer.material = smashMaterials[0];
     }
 
     public void ResetDash()
