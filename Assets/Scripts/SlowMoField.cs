@@ -10,7 +10,7 @@ public class SlowMoField : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            if (firstTrigger)
+            if (firstTrigger && GameManager.instance.levelGenerator != null)
             {
                 GameManager.instance.levelGenerator.PlaceNextObstacle();
                 firstTrigger = false;
