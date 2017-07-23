@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     [Header("Time")]
     [Range(1f, 10f)]
     [Tooltip("High values may result in unexpected behaviour")]
+    public float minTimeScale = 1;
+    [Range(1f, 10f)]
     public float maxTimeScale = 3;
     [Range(0.01f, 0.1f)]
     public float timeScaleIncrements = 0.02f;
@@ -39,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = minTimeScale;
+
         //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
 
@@ -77,6 +81,7 @@ public class GameManager : MonoBehaviour
         }
 
         pcharacter.ResetCharacter();
+        Time.timeScale = minTimeScale;
     }
 
     public void AddPointsForObstacleCompletion()
@@ -85,7 +90,7 @@ public class GameManager : MonoBehaviour
         currentPoints += 1;
 
         if (Time.timeScale < maxTimeScale)
-            Time.timeScale += timeScaleIncrements;
+            Time.timeScale += 0.1f; // timeScaleIncrements;
     }
 
     public void UpdatePlayerStartingPosition(Vector3 newPosition)

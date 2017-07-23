@@ -67,6 +67,7 @@ public class BreakScript : MonoBehaviour {
     {
         if (!isAlive())
         {
+            GetComponent<Rigidbody>().isKinematic = false;
             GetComponent<MeshRenderer>().enabled = true;
             cleanUp();
         }
@@ -80,6 +81,7 @@ public class BreakScript : MonoBehaviour {
         }
 
         GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
         //Break();
         Explode();
 
