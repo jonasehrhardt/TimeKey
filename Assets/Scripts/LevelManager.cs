@@ -12,8 +12,8 @@ public class LevelManager : MonoBehaviour
 
     GameObject getRandomObstacle()
     {
-        var randomID = Random.Range(0, obstaclePrefabs.Count);
-        return obstaclePrefabs[randomID];
+        var randomIndex = Random.Range(0, obstaclePrefabs.Count);
+        return obstaclePrefabs[randomIndex];
     }
 
     // Use this for initialization

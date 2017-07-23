@@ -14,30 +14,25 @@ public class PassiveCharacterController : MonoBehaviour
     public float characterSpeedSlowed = 2f;
     float currentCharacterSpeed;
 
-    [Space(10)]
     [Header("Jump")]
     public float jumpForce = 5.5f;
     public float doubleJumpForce = 8f;
 
-    [Space(10)]
     [Header("Shrink")]
     public float normalScale = 1f;
     public float shrinkScale = 0.8f;
     public float doubleShrinkScale = 0.6f;
 
-    [Space(10)]
     [Header("Dash")]
     public float dashForce = 5.5f;
     public float doubleDashForce = 8f;
 
-    [Space(10)]
     [Header("Smash")]
     private int smashCounter = 0;
     private GameObject[] smashObs;
     private MeshRenderer meshRenderer;
     public Material[] smashMaterials; //[0] normal, [1] single dash, [2] double dash
 
-    [Space(10)]
     [Header("DeathTimer")]
     public float deathTimer = 3;
     private float timeDeath = 0;
