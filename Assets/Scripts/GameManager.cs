@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     [Range(1f, 10f)]
     public float maxTimeScale = 3;
     [Range(0.01f, 0.1f)]
-    public float timeScaleIncrements = 0.02f;
+    public float timeScaleIncrements = 0.1f;
 
     private void Awake()
     {
@@ -102,8 +102,11 @@ public class GameManager : MonoBehaviour
         //TODO: Change points depending on speed?
         currentPoints += 1;
 
-        if (!pcharacter.useAI && Time.timeScale < maxTimeScale)
-            Time.timeScale += 0.1f; // timeScaleIncrements;
+        if (Time.timeScale < maxTimeScale)
+            Time.timeScale += timeScaleIncrements;
+
+        // reset AI speed when max time reached
+        else if(pcharacter.useAI) { Time.timeScale = minTimeScale; }
     }
 
     public void UpdatePlayerStartingPosition(Vector3 newPosition)

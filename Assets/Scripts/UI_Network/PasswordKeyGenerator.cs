@@ -10,6 +10,7 @@ public class PasswordKeyGenerator : MonoBehaviour
     private MyNetworkManager _networkManager;
 
     private int _passwordKey;
+    private long _lastTime = 0;
 
     private void Awake()
     {
@@ -19,21 +20,38 @@ public class PasswordKeyGenerator : MonoBehaviour
 
     private void Start()
     {
+        _lastTime = CurrentMillis.Millis;
+  
         GeneratePasswordKey();
         _networkManager.SetPasswordKeyText(_passwordKey.ToString());
 
         StartCoroutine(PasswordKeyGeneratorLoop(_nextPasswordKeyTime));
     }
 
+    /// <summary>Class to get current timestamp with enough precision</summary>
+    private static class CurrentMillis
+    {
+        private static readonly System.DateTime Jan1St1970 = new System.DateTime(1970, 1, 1, 0, 0, 0, System.DateTimeKind.Utc);
+        /// <summary>Get extra long current timestamp</summary>
+        public static long Millis { get { return (long)((System.DateTime.UtcNow - Jan1St1970).TotalMilliseconds); } }
+    }
+
     private IEnumerator PasswordKeyGeneratorLoop(float nextPasswordKeyTime)
     {
-        float lastPasswordKeyTime = 0;
+        //float lastPasswordKeyTime = 0;
+        long lastPasswordKeyTime = CurrentMillis.Millis;
+        long triggerTime = (long)(nextPasswordKeyTime * 1000);
 
         while (true)
         {
-            if (lastPasswordKeyTime + nextPasswordKeyTime <= Time.time)
+            long time = CurrentMillis.Millis;
+            long timeDif = time - lastPasswordKeyTime;
+
+            //if (lastPasswordKeyTime + nextPasswordKeyTime <= Time.time) {
+            //lastPasswordKeyTime = Time.time;
+            if (timeDif >= triggerTime)
             {
-                lastPasswordKeyTime = Time.time;
+                lastPasswordKeyTime = time;
                 GeneratePasswordKey();
                 _networkManager.SetPasswordKeyText(_passwordKey.ToString());
                 //ShowPasswordKey();
