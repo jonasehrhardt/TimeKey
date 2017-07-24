@@ -71,10 +71,10 @@ public class ClientUIController : MonoBehaviour
             ConnectionPasswordText.text = string.Empty;
     }
 
-    public void AddButtonsToGameUI(params string[] buttonNames)
+    public void AddButtonsToGameUI(params ClientGameUIController.ButtonSettings[] buttons)
     {
         if (_clientGameUI != null)
-            _clientGameUI.GetComponent<ClientGameUIController>().AddButtons(buttonNames);
+            _clientGameUI.GetComponent<ClientGameUIController>().AddButtons(buttons);
     }
 
     public void RemoveAllButtonsFromGameUI()
