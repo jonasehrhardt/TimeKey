@@ -29,9 +29,8 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public LevelManager levelManager;
-
-    [HideInInspector]
-    public int deathCount = 0;
+        
+    private int deathCount = 0;
 
     private void Awake()
     {
@@ -122,5 +121,10 @@ public class GameManager : MonoBehaviour
     public void UpdatePlayerStartingPosition(Vector3 newPosition)
     {
         characterStartingPosition = newPosition;
+    }
+
+    public void Death()
+    {
+        deathCount++;
     }
 }

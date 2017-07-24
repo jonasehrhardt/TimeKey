@@ -55,8 +55,7 @@ public class PassiveCharacterController : MonoBehaviour
 
     public void ResetCharacter()
     {
-        GameManager.instance.deathCount++;
-        Debug.Log("DeathCount: " + GameManager.instance.deathCount);
+        GameManager.instance.Death();
 
         old_position = transform.position + new Vector3(-999, 0, 0);
 
