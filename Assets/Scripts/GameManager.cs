@@ -71,6 +71,12 @@ public class GameManager : MonoBehaviour
             ResetLevel();
         }
 
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            PlayerPrefs.SetInt("highscore", 0);
+            _highscore = 0;
+        }
+
         //update UI
         if (_serverUIController != null)
         {
