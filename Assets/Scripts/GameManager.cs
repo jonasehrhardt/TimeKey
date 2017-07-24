@@ -103,11 +103,16 @@ public class GameManager : MonoBehaviour
             _highscore = currentPoints;
             PlayerPrefs.SetInt("highscore", _highscore);
         }
+
+        currentPoints = 0;
     }
 
     public void ObstacleCompleted()
     {
-        currentPoints += 1;
+        if (!pcharacter.useAI)
+        {
+            currentPoints += 1;
+        }
         if (levelManager != null)
         {
             levelManager.obstaclesCleared++;
