@@ -10,6 +10,10 @@ public class ServerUIController : MonoBehaviour
     private GameObject _serverWaitUI;
     [SerializeField]
     private GameObject _serverGameUI;
+    [SerializeField]
+    private GameObject _background;
+    [SerializeField]
+    private GameObject _smallBackground;
 
     private MyNetworkManager _networkManager;
     private PasswordKeyGenerator _passwordKeyGenerator;
@@ -33,24 +37,51 @@ public class ServerUIController : MonoBehaviour
     {
         if (_serverWaitUI != null)
             _serverWaitUI.SetActive(true);
+
+        if (_background != null)
+            _background.SetActive(true);
+
+        if (_smallBackground != null)
+            _smallBackground.SetActive(false);
     }
 
     public void HideServerWaitUI()
     {
         if (_serverWaitUI != null)
             _serverWaitUI.SetActive(false);
+
+
+        if (_background != null)
+            _background.SetActive(false);
+
+        if (_smallBackground != null)
+            _smallBackground.SetActive(false);
     }
 
     public void ShowServerGameUI()
     {
         if (_serverGameUI != null)
             _serverGameUI.SetActive(true);
+
+
+        if (_background != null)
+            _background.SetActive(false);
+
+        if (_smallBackground != null)
+            _smallBackground.SetActive(true);
     }
 
     public void HideServerGameUI()
     {
         if (_serverGameUI != null)
             _serverGameUI.SetActive(false);
+
+
+        if (_background != null)
+            _background.SetActive(false);
+
+        if (_smallBackground != null)
+            _smallBackground.SetActive(false);
     }
 
     public void SetPasswordKeyText(string passwordKey)

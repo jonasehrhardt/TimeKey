@@ -193,6 +193,8 @@ public class MyNetworkManager : NetworkManager
             _clientUIController.HideClientGameUI();
         }
 
+        
+
         if (networkAddress != null && networkAddress != string.Empty)
             if (_isHost)
             {
