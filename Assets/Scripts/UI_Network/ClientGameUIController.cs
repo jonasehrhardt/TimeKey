@@ -60,6 +60,6 @@ public class ClientGameUIController : MonoBehaviour
     {
         _dummyButton.SetActive(false);
 
-        AddButtons(new ButtonSettings("Jump", Color.white), new ButtonSettings("Shrink", Color.green), new ButtonSettings("Smash", Color.yellow), new ButtonSettings("Dash", Color.grey));
+        //AddButtons(new ButtonSettings("Jump", Color.white), new ButtonSettings("Shrink", Color.green), new ButtonSettings("Smash", Color.yellow), new ButtonSettings("Dash", Color.grey));
     }
 }
