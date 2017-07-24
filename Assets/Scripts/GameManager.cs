@@ -97,12 +97,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddPointsForObstacleCompletion()
+    public void ObstacleCompleted()
     {
         //TODO: Change points depending on speed?
         currentPoints += 1;
 
-        if (Time.timeScale < maxTimeScale)
+        if (!pcharacter.useAI && Time.timeScale < maxTimeScale)
             Time.timeScale += 0.1f; // timeScaleIncrements;
     }
 

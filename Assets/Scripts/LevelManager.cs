@@ -34,11 +34,14 @@ public class LevelManager : MonoBehaviour
     private float currentMiddleThreshold = 0;
 
     private GameObject lastStage;
-    private int currentIndex;
+    private GameObject[] loadedObstacles;
+    private int obstaclesCleared = 0;
 
     // Use this for initialization
     void Start()
     {
+        loadedObstacles = new GameObject[obstaclesToLoadAtStart + 1];
+
         //Destroy everything but the starting area
         foreach (Transform child in transform)
         {
@@ -49,6 +52,7 @@ public class LevelManager : MonoBehaviour
             else
             {
                 //assumes there always is a start stage in the scene already
+                loadedObstacles[0] = child.gameObject;
                 lastStage = child.gameObject;
             }
 
@@ -56,11 +60,12 @@ public class LevelManager : MonoBehaviour
             currentMiddleThreshold = middleStartThreshold;
         }
                 
-        for (int i = 0; i < obstaclesToLoadAtStart; i++)
+        for (int i = 1; i <= obstaclesToLoadAtStart; i++)
         {
             GameObject stage = Instantiate(getRandomObstacle(), transform);
             stage.transform.position = lastStage.transform.position + new Vector3(20, 0, 0);
             lastStage = stage;
+            loadedObstacles[i] = stage;
         }
     }
 
@@ -75,8 +80,6 @@ public class LevelManager : MonoBehaviour
         var threshold = Random.value;
 
         GameObject nextObstacle;
-        Debug.Log(currentIndex + ":[" + "t: " + threshold + " | e: " + currentEasyThreshold + " | m: " + currentMiddleThreshold + "]");
-        currentIndex++;
 
         //select random obstacle from chosen list
         if (currentEasyThreshold < threshold)

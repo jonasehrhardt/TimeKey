@@ -12,7 +12,6 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] hardObstacles;
 
     private List<GameObject> currentLoadedObstacles;
-
     private int currentXPosition; //used to place new obstacles
 
     [Header("Difficulty related stuff")]
@@ -21,11 +20,6 @@ public class LevelGenerator : MonoBehaviour
     [Range(0f, 0.1f)]
     public float ratioIncreasePerObstacle = 0.05f; 
     private float currentEasyHardRatio = 0;
-
-    private void Awake()
-    {
-        //GameManager.instance.levelGenerator = this;
-    }
 
     void Start ()
     {

@@ -10,7 +10,7 @@ public class InputResetter : MonoBehaviour
             //Reset player input (!not enable!)
             GameManager.instance.inputManager.ResetPlayerInputs();
 
-            GameManager.instance.AddPointsForObstacleCompletion();
+            GameManager.instance.ObstacleCompleted();
 
 			GameManager.instance.pcharacter.ResetSmash();
             GameManager.instance.pcharacter.ResetDash();
