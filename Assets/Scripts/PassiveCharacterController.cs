@@ -87,13 +87,13 @@ public class PassiveCharacterController : MonoBehaviour
         if (breakscript!=null && !breakscript.isAlive())
         {
             timeDeath += Time.deltaTime;
-            if (timeDeath > deathTimer) GameManager.instance.ResetLevel();
+            if (timeDeath > deathTimer) ResetCharacter();
             return;
         }
 
         if(this.transform.position.y < -6)
         {
-            GameManager.instance.ResetLevel();
+            ResetCharacter();
             return;
         }
 
