@@ -56,10 +56,7 @@ public class GameManager : MonoBehaviour
         if (serverUIObject != null)
             _serverUIController = serverUIObject.GetComponent<ServerUIController>();
 
-        if (PlayerPrefs.HasKey("highscore"))
-            _highscore = PlayerPrefs.GetInt("highscore");
-        else
-            _highscore = 0;
+        _highscore = PlayerPrefs.GetInt("highscore", 0);
     }
 
     void Update()
@@ -90,7 +87,7 @@ public class GameManager : MonoBehaviour
         pcharacter.ResetCharacter();
         Time.timeScale = minTimeScale;
 
-        if(currentPoints > _highscore)
+        if (!pcharacter.useAI && currentPoints > _highscore)
         {
             _highscore = currentPoints;
             PlayerPrefs.SetInt("highscore", _highscore);
@@ -106,7 +103,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale += timeScaleIncrements;
 
         // reset AI speed when max time reached
-        else if(pcharacter.useAI) { Time.timeScale = minTimeScale; }
+        else if (pcharacter.useAI) { Time.timeScale = minTimeScale; }
     }
 
     public void UpdatePlayerStartingPosition(Vector3 newPosition)
