@@ -35,11 +35,14 @@ public class LevelManager : MonoBehaviour
 
     private GameObject lastStage;
     private GameObject[] loadedObstacles;
-    private int obstaclesCleared = 0;
+    [HideInInspector]
+    public int obstaclesCleared = 1; //starting area has no resetter -> +1
 
     // Use this for initialization
     void Start()
     {
+        GameManager.instance.levelManager = this;
+
         loadedObstacles = new GameObject[obstaclesToLoadAtStart + 1];
 
         //Destroy everything but the starting area
@@ -99,5 +102,22 @@ public class LevelManager : MonoBehaviour
         }
 
         return nextObstacle;
+    }
+
+    public Vector3 placeNewStartingArea()
+    {
+        var oldObstacle = loadedObstacles[obstaclesCleared];
+        loadedObstacles[obstaclesCleared] = Instantiate(startStagePrefab, oldObstacle.transform.position, Quaternion.identity, transform);
+        Destroy(oldObstacle);
+        
+        return loadedObstacles[obstaclesCleared].transform.Find("BallStartingPosition").transform.position;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.instance.levelManager == this)
+        {
+            GameManager.instance.levelManager = null;
+        }
     }
 }

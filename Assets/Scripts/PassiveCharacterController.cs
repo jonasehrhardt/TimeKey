@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,10 +55,17 @@ public class PassiveCharacterController : MonoBehaviour
 
     public void ResetCharacter()
     {
+        GameManager.instance.deathCount++;
+        Debug.Log("DeathCount: " + GameManager.instance.deathCount);
+
         old_position = transform.position + new Vector3(-999, 0, 0);
 
         GameManager.instance.inputManager.ResetPlayerInputs();
         GameManager.instance.inputManager.DisablePlayerInput();
+
+        if (GameManager.instance.levelManager != null) {
+            GameManager.instance.UpdatePlayerStartingPosition(GameManager.instance.levelManager.placeNewStartingArea());
+        }
 
         transform.position = GameManager.instance.characterStartingPosition;
         rb.velocity = Vector3.zero;
@@ -229,6 +237,7 @@ public class PassiveCharacterController : MonoBehaviour
             toBeRespawned.GetComponent<BoxCollider>().enabled = true;
             toBeRespawned.GetComponent<MeshRenderer>().enabled = true;
         }
+        smashObs = null;
     }
 
     void OnCollisionEnter(Collision collision)

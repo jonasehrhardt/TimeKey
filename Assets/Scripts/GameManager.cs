@@ -27,6 +27,12 @@ public class GameManager : MonoBehaviour
     [Range(0.01f, 0.1f)]
     public float timeScaleIncrements = 0.1f;
 
+    [HideInInspector]
+    public LevelManager levelManager;
+
+    [HideInInspector]
+    public int deathCount = 0;
+
     private void Awake()
     {
         //Debug.Log("Awakening GameManager");
@@ -56,10 +62,7 @@ public class GameManager : MonoBehaviour
         if (serverUIObject != null)
             _serverUIController = serverUIObject.GetComponent<ServerUIController>();
 
-        if (PlayerPrefs.HasKey("highscore"))
-            _highscore = PlayerPrefs.GetInt("highscore");
-        else
-            _highscore = 0;
+        _highscore = PlayerPrefs.GetInt("highscore", 0);
     }
 
     void Update()
@@ -90,7 +93,7 @@ public class GameManager : MonoBehaviour
         pcharacter.ResetCharacter();
         Time.timeScale = minTimeScale;
 
-        if(currentPoints > _highscore)
+        if (!pcharacter.useAI && currentPoints > _highscore)
         {
             _highscore = currentPoints;
             PlayerPrefs.SetInt("highscore", _highscore);
@@ -99,14 +102,21 @@ public class GameManager : MonoBehaviour
 
     public void ObstacleCompleted()
     {
-        //TODO: Change points depending on speed?
         currentPoints += 1;
+        if (levelManager != null)
+        {
+            levelManager.obstaclesCleared++;
+        }
 
         if (Time.timeScale < maxTimeScale)
             Time.timeScale += timeScaleIncrements;
 
         // reset AI speed when max time reached
-        else if(pcharacter.useAI) { Time.timeScale = minTimeScale; }
+        else if (pcharacter.useAI)
+        {
+            Time.timeScale = minTimeScale;
+            ResetLevel();
+        }
     }
 
     public void UpdatePlayerStartingPosition(Vector3 newPosition)

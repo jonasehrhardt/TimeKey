@@ -33,7 +33,7 @@ public class LevelGenerator : MonoBehaviour
         PlaceNextObstacle();
     }
 
-    public void PlaceNextObstacle()
+    private void PlaceNextObstacle()
     {
         GameObject newObstacle = GetNextObstacle();
 
@@ -41,14 +41,6 @@ public class LevelGenerator : MonoBehaviour
         var obstacle = Instantiate(newObstacle, new Vector3(currentXPosition, 0, 0), Quaternion.identity, transform);
         currentXPosition += 20;
 
-        /*
-        //change slowmo field width
-        Transform slowMoField = obstacle.transform.Find("Slow_Mo_Field");
-
-        var slowMoFieldWidth = 3f; //TODO: calculate appropriate width
-        slowMoField.localScale = new Vector3(slowMoFieldWidth, 1, 1);
-        */
-        
         if (currentLoadedObstacles.Count >= 3)
         {
             var obstacleToDelete = currentLoadedObstacles[0];
