@@ -37,14 +37,16 @@ public class PassiveCharacterController : MonoBehaviour
     [Header("DeathTimer")]
     public float deathTimer = 3;
     private float timeDeath = 0;
-    private BreakScript breakscript;
+    private BreakScriptRef breakscript;
     private Vector3 old_position;
     private float timeCount_UpdatePosition = 1;
     private float timeLeft_UpdatePosition = 0;
 
-    void Start ()
+    private BreakScript collider_breakscript = null;
+
+   void Start ()
     {
-        breakscript = GetComponent<BreakScript>();
+        breakscript = GetComponent<BreakScriptRef>();
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
 		gameObject.GetComponent<TrailRenderer> ().enabled = false;
@@ -161,6 +163,11 @@ public class PassiveCharacterController : MonoBehaviour
         //Disable Player Input
         GameManager.instance.inputManager.DisablePlayerInput();
         if(slowMotion) GameManager.instance.pcharacter.SlowDown(false);
+        if(collider_breakscript != null)
+        {
+            collider_breakscript.cleanUp();
+            collider_breakscript = null;
+        }
     }
 
     public void SlowDown (bool slowed)
@@ -233,19 +240,37 @@ public class PassiveCharacterController : MonoBehaviour
         }
         foreach (GameObject toBeRespawned in smashObs)
         {
-            toBeRespawned.GetComponent<BoxCollider>().enabled = true;
+            if(toBeRespawned.GetComponent<BoxCollider>() != null) toBeRespawned.GetComponent<BoxCollider>().enabled = true;
             toBeRespawned.GetComponent<MeshRenderer>().enabled = true;
+            GameObject remains = GameObject.Find(toBeRespawned.name + " Remains");
+            if (remains != null) remains.GetComponent<BreakScript>().cleanUp();
         }
         smashObs = null;
     }
 
+    private IEnumerator SmashAction(Collider collider, GameObject remains)
+    {
+        if (GetComponent<MeshFilter>() == null || GetComponent<SkinnedMeshRenderer>() == null)
+        {
+            yield return null;
+        }
+
+        collider_breakscript = remains.GetComponent<BreakScript>();
+        collider_breakscript.transform.position = collider.transform.position;
+        collider_breakscript.transform.localScale = collider.transform.localScale;
+        collider_breakscript.transform.rotation = collider.transform.rotation;
+        collider_breakscript.Explode(true);
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.tag == "Smashable"  && smashCounter > 0)
+        Collider collider = collision.collider;
+        if (collider.tag == "Smashable"  && smashCounter > 0)
         {
-            collision.collider.gameObject.GetComponent<BoxCollider>().enabled = false;
-            collision.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
-
+            collider.gameObject.GetComponent<BoxCollider>().enabled = false;
+            collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
+            GameObject remains = GameObject.Find(collider.name + " Remains");
+            if (remains != null) StartCoroutine(SmashAction(collider, remains));
             smashCounter--;
         }
         else

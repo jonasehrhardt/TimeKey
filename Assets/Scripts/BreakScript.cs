@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class BreakScript : MonoBehaviour {
 
-    private GameObject debris = null;
     private List<GameObject> pieces = new List<GameObject>();
+    private Vector3 startPosition;
 
     void Start()
     {
-        debris = new GameObject("Debris");
-        debris.SetActive(false);
+        startPosition = transform.position;
         Break();
     }
 
-    public void Explode()
+    public void Explode(bool smashObject=false, GameObject collider=null)
     {
-        debris.transform.position = transform.position;
-        debris.transform.rotation = transform.rotation;
-        debris.SetActive(true);
+        Material mat = null;
+        if(collider!=null) mat = collider.GetComponent<MeshRenderer>().material;
 
         foreach (GameObject p in pieces)
         {
             Rigidbody rb = p.GetComponent<Rigidbody>();
             rb.isKinematic = false;
-            Vector3 explosionPos = new Vector3(transform.position.x + Random.Range(-0.5f, 0.5f), transform.position.y + Random.Range(0f, 0.5f), transform.position.z + Random.Range(-0.5f, 0.5f));
+            p.GetComponent<MeshRenderer>().enabled = true;
+            if (mat != null) p.GetComponent<MeshRenderer>().material = mat;
+            Vector3 explosionPos = new Vector3(transform.position.x + (smashObject ? -2: Random.Range(-0.5f, 0.5f)), transform.position.y + Random.Range(0f, 0.5f), transform.position.z);
             rb.AddExplosionForce(Random.Range(300, 500), explosionPos, 5);
         }
     }
@@ -46,52 +46,13 @@ public class BreakScript : MonoBehaviour {
             Rigidbody rb = p.GetComponent<Rigidbody>();
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.transform.position = debris.transform.position;
-            rb.transform.rotation = debris.transform.rotation;
+            rb.transform.position = gameObject.transform.position;
+            rb.transform.rotation = gameObject.transform.rotation;
             rb.isKinematic = true;
+            p.GetComponent<MeshRenderer>().enabled = false;
         }
-        debris.SetActive(false);
-    }
-
-    public bool isAlive()
-    {
-        return GetComponent<MeshRenderer>().enabled;
-    }
-
-    public void PlayDeath()
-    {
-        if (isAlive()) StartCoroutine(Kill(false));
-    }
-
-    public void Revive()
-    {
-        if (!isAlive())
-        {
-            GetComponent<Rigidbody>().isKinematic = false;
-            GetComponent<MeshRenderer>().enabled = true;
-            cleanUp();
-        }
-    }
-
-    private IEnumerator Kill(bool destroy)
-    {
-        if (GetComponent<MeshFilter>() == null || GetComponent<SkinnedMeshRenderer>() == null)
-        {
-            yield return null;
-        }
-
-        GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<Rigidbody>().isKinematic = true;
-        //Break();
-        Explode();
-
-        if (destroy == true)
-        {
-            yield return new WaitForSeconds(1.0f);
-            new WaitForSeconds(1.0f);
-            Destroy(gameObject);
-        }
-    }
+        transform.position = startPosition;
+   }
 
     public void Break()
     {
@@ -145,9 +106,9 @@ public class BreakScript : MonoBehaviour {
 
                 GameObject GO = new GameObject("Triangle " + (i / 3));
                 GO.layer = LayerMask.NameToLayer("Debris");
-                GO.transform.position = debris.transform.position;
-                GO.transform.rotation = debris.transform.rotation;
-                GO.transform.parent = debris.transform;
+                GO.transform.position = transform.position;
+                GO.transform.rotation = transform.rotation;
+                GO.transform.parent = transform;
                 GO.AddComponent<MeshRenderer>().material = materials[submesh];
                 GO.AddComponent<MeshFilter>().mesh = mesh;
                 GO.AddComponent<BoxCollider>();
