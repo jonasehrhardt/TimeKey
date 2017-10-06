@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     public int currentPoints = 0;
     private float gameStartTime = 0;
     private int _highscore;
+	private GameObject[] lifeBar;
 
     private ServerUIController _serverUIController;
 
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = minTimeScale;
 
+		lifeBar = new GameObject[] {GameObject.Find("Life1"), GameObject.Find("Life2"), GameObject.Find("Life3")};
         //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
 
@@ -137,5 +140,17 @@ public class GameManager : MonoBehaviour
     public void Death()
     {
         deathCount++;
+		lifeBar [3 - deathCount].GetComponent<MeshRenderer> ().enabled = false;
+		if (deathCount == 3) {
+			Debug.Log ("Tot");
+			deathCount = 0;
+			ResetLevel ();
+			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			Debug.Log (_highscore);
+			Debug.Log ("Level Restart");
+			for (int i = 0; i < 3; i++)
+				lifeBar [i].GetComponent<MeshRenderer> ().enabled = true;
+		}
     }
 }
+	
