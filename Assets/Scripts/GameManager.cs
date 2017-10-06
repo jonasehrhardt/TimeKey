@@ -140,16 +140,17 @@ public class GameManager : MonoBehaviour
     public void Death()
     {
         deathCount++;
-		lifeBar [3 - deathCount].GetComponent<MeshRenderer> ().enabled = false;
-		if (deathCount == 3) {
-			Debug.Log ("Tot");
+		if (SceneManager.GetActiveScene ().name == "Game") {
+			lifeBar [3 - deathCount].GetComponent<MeshRenderer> ().enabled = false;
+			if (deathCount == 3) {
+				deathCount = 0;
+				ResetLevel ();
+				SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+				for (int i = 0; i < 3; i++)
+					lifeBar [i].GetComponent<MeshRenderer> ().enabled = true;
+			}	
+		} else {
 			deathCount = 0;
-			ResetLevel ();
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-			Debug.Log (_highscore);
-			Debug.Log ("Level Restart");
-			for (int i = 0; i < 3; i++)
-				lifeBar [i].GetComponent<MeshRenderer> ().enabled = true;
 		}
     }
 }
