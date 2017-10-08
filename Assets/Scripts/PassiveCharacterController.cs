@@ -46,6 +46,7 @@ public class PassiveCharacterController : MonoBehaviour
 
    void Start ()
     {
+        gameObject.transform.Rotate(new Vector3(0, 1, 0), 180);
         breakscript = GetComponent<BreakScriptRef>();
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
@@ -259,7 +260,7 @@ public class PassiveCharacterController : MonoBehaviour
         collider_breakscript.transform.position = collider.transform.position;
         collider_breakscript.transform.localScale = collider.transform.localScale;
         collider_breakscript.transform.rotation = collider.transform.rotation;
-        collider_breakscript.Explode(true);
+        collider_breakscript.Explode(true, collider.gameObject);
     }
 
     void OnCollisionEnter(Collision collision)

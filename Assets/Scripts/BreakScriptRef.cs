@@ -8,7 +8,11 @@ public class BreakScriptRef : MonoBehaviour {
     private void Start()
     {
         GameObject remains = GameObject.Find(name + " Remains");
-        if (remains == null) Debug.LogError("Could not find '" + remains.name + "'!");
+        if (remains == null)
+        {
+            Debug.LogError("Could not find remains of '" + name + "'!");
+            return;
+        }
         breakscript = remains.GetComponent<BreakScript>();
     }
 
