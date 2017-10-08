@@ -11,6 +11,18 @@ public class SlowMoField : MonoBehaviour
         if (other.tag == "Player")
         {
             GameManager.instance.pcharacter.TriggerEnter(Type1, Type2);
+
+            foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
+            {
+                if (networkPlayer != null)
+                {
+                    var networkPlayerController = networkPlayer.GetComponent<NetworkPlayerController>();
+                    if (networkPlayerController != null)
+                    {
+                        networkPlayerController.SlowMoFieldBegins();
+                    }
+                }
+            }
         }
     }
 
@@ -19,6 +31,18 @@ public class SlowMoField : MonoBehaviour
         if (other.tag == "Player")
         {
             GameManager.instance.pcharacter.TriggerExit(Type1, Type2);
+
+            foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
+            {
+                if (networkPlayer != null)
+                {
+                    var networkPlayerController = networkPlayer.GetComponent<NetworkPlayerController>();
+                    if (networkPlayerController != null)
+                    {
+                        networkPlayerController.SlowMoFieldOver();
+                    }
+                }
+            }
         }
     }
 }

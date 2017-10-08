@@ -42,8 +42,8 @@ public class InputManager
         ShrinkDash,     //down + right
         SmashDash,      //left + right
     }
-    
-    public void UpdatePlayerInput (SingleInputType input, int playerNumber)
+
+    public bool UpdatePlayerInput(SingleInputType input, int playerNumber)
     {
         if (inputIsEnabled)
         {
@@ -60,9 +60,11 @@ public class InputManager
                     break;
             }
         }
+
+        return inputIsEnabled;
     }
 
-    public void ResetPlayerInputs ()
+    public void ResetPlayerInputs()
     {
         currentInputPlayer0 = SingleInputType.None;
         currentInputPlayer1 = SingleInputType.None;
@@ -82,7 +84,7 @@ public class InputManager
     {
         //Debug.Log("Player 0: " + currentInputPlayer0);
         //Debug.Log("Player 1: " + currentInputPlayer1);
-        
+
         switch (currentInputPlayer0)
         {
             case SingleInputType.None:
@@ -99,7 +101,7 @@ public class InputManager
                     case SingleInputType.Dash:
                         return CombinedInputType.Dash;
                 }
-            break;
+                break;
             case SingleInputType.Jump:
                 switch (currentInputPlayer1)
                 {

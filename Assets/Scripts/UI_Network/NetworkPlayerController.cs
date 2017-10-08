@@ -24,7 +24,7 @@ public class NetworkPlayerController : NetworkBehaviour
     {
         if (isServer)
         {
-            Debug.Log("send");
+            Debug.Log("send StartClientGame");
             TargetStartClientGame(connectionToClient);
         }
     }
@@ -42,6 +42,22 @@ public class NetworkPlayerController : NetworkBehaviour
         if(isLocalPlayer && !isServer && isClient)
         {
             CmdSetPlayerInput(_playerNumber, type);
+        }
+    }
+
+    public void SlowMoFieldBegins()
+    {
+        if (isServer)
+        {
+            TargetSlowMoFieldBegins(connectionToClient);
+        }
+    }
+
+    public void SlowMoFieldOver()
+    {
+        if (isServer)
+        {
+            TargetSlowMoFieldOver(connectionToClient);
         }
     }
 
@@ -78,14 +94,33 @@ public class NetworkPlayerController : NetworkBehaviour
     [TargetRpc]
     public void TargetStartClientGame(NetworkConnection conn)
     {
-        Debug.Log("start");
-
         if (_clientUIController != null)
         {
             _clientUIController.HideClientWaitUI();
             _clientUIController.ShowClientGameUI();
         }
 
+    }
+
+    [TargetRpc]
+    public void TargetSlowMoFieldOver(NetworkConnection conn)
+    {
+        if(_clientUIController != null)
+        {
+            _clientUIController.DisableAllButtons();
+        }
+    }
+
+    [TargetRpc]
+    public void TargetSlowMoFieldBegins(NetworkConnection conn)
+    {
+        if (_clientUIController != null)
+        {
+            _clientUIController.InteractivateAllButtons();
+#if UNITY_ANDROID
+            Handheld.Vibrate();
+#endif
+        }
     }
 
     [ClientRpc]
@@ -101,6 +136,8 @@ public class NetworkPlayerController : NetworkBehaviour
     [Command]
     public void CmdSetPlayerInput(int playerNumber, InputManager.SingleInputType type)
     {
+        Debug.Log("CmdSetPlayerInput: " + type.ToString());
+
         var playerObject = GameObject.FindGameObjectWithTag("Player");
         if(playerObject != null)
         {

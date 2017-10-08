@@ -44,14 +44,14 @@ public class PassiveCharacterController : MonoBehaviour
 
     private BreakScript collider_breakscript = null;
 
-   void Start ()
+    void Start()
     {
         gameObject.transform.Rotate(new Vector3(0, 1, 0), 180);
         breakscript = GetComponent<BreakScriptRef>();
         rb = GetComponent<Rigidbody>();
         currentCharacterSpeed = characterSpeedNormal;
-		gameObject.GetComponent<TrailRenderer> ().enabled = false;
-        old_position = transform.position + new Vector3(-999,0,0);
+        gameObject.GetComponent<TrailRenderer>().enabled = false;
+        old_position = transform.position + new Vector3(-999, 0, 0);
         timeLeft_UpdatePosition = timeCount_UpdatePosition;
         meshRenderer = GetComponent<MeshRenderer>();
     }
@@ -65,7 +65,8 @@ public class PassiveCharacterController : MonoBehaviour
         GameManager.instance.inputManager.ResetPlayerInputs();
         GameManager.instance.inputManager.DisablePlayerInput();
 
-        if (GameManager.instance.levelManager != null) {
+        if (GameManager.instance.levelManager != null)
+        {
             GameManager.instance.UpdatePlayerStartingPosition(GameManager.instance.levelManager.placeNewStartingArea());
         }
 
@@ -87,14 +88,14 @@ public class PassiveCharacterController : MonoBehaviour
 
     private void Update()
     {
-        if (breakscript!=null && !breakscript.isAlive())
+        if (breakscript != null && !breakscript.isAlive())
         {
             timeDeath += Time.deltaTime;
             if (timeDeath > deathTimer) ResetCharacter();
             return;
         }
 
-        if(this.transform.position.y < -6)
+        if (this.transform.position.y < -6)
         {
             ResetCharacter();
             return;
@@ -123,10 +124,15 @@ public class PassiveCharacterController : MonoBehaviour
     public void SetInputType(int playerNumber, InputManager.SingleInputType type)
     {
         if (type != InputManager.SingleInputType.None)
-            GameManager.instance.inputManager.UpdatePlayerInput(type, playerNumber);
+        {
+            if (GameManager.instance.inputManager.UpdatePlayerInput(type, playerNumber))
+            {
+                GameManager.instance.UpdateButtonPressedUI(playerNumber, type);
+            }
+        }
     }
 
-    void FixedUpdate ()
+    void FixedUpdate()
     {
         if (breakscript != null)
         {
@@ -141,18 +147,20 @@ public class PassiveCharacterController : MonoBehaviour
             }
             else timeLeft_UpdatePosition--;
         }
-       
+
         //Move character
         rb.velocity = new Vector3(currentCharacterSpeed, rb.velocity.y, rb.velocity.z);
-	}
+    }
 
     public void TriggerEnter(InputManager.SingleInputType type1, InputManager.SingleInputType type2)
     {
         //Enable Player Input
         GameManager.instance.inputManager.EnablePlayerInput();
-        if(slowMotion) GameManager.instance.pcharacter.SlowDown(true);
+        GameManager.instance.ShowPressNowText();
+        if (slowMotion) GameManager.instance.pcharacter.SlowDown(true);
 
-        if (useAI) {
+        if (useAI)
+        {
             InputManager mngr = GameManager.instance.inputManager;
             mngr.UpdatePlayerInput(type1, 0);
             mngr.UpdatePlayerInput(type2, 1);
@@ -163,34 +171,38 @@ public class PassiveCharacterController : MonoBehaviour
     {
         //Disable Player Input
         GameManager.instance.inputManager.DisablePlayerInput();
-        if(slowMotion) GameManager.instance.pcharacter.SlowDown(false);
-        if(collider_breakscript != null)
+
+        if (GameManager.instance.inputManager.getCurrentInput() == InputManager.CombinedInputType.None)
+            GameManager.instance.ShowNoInputText();
+
+        if (slowMotion) GameManager.instance.pcharacter.SlowDown(false);
+        if (collider_breakscript != null)
         {
             collider_breakscript.cleanUp();
             collider_breakscript = null;
         }
     }
 
-    public void SlowDown (bool slowed)
+    public void SlowDown(bool slowed)
     {
         currentCharacterSpeed = slowed ? characterSpeedSlowed : characterSpeedNormal;
     }
 
-    public void Jump (bool doubleJump)
+    public void Jump(bool doubleJump)
     {
         var jumpFactor = doubleJump ? doubleJumpForce : jumpForce;
 
         rb.velocity = new Vector3(0, jumpFactor, 0);
     }
 
-    public void Shrink (bool doubleShrink)
+    public void Shrink(bool doubleShrink)
     {
         var scale = doubleShrink ? doubleShrinkScale : shrinkScale;
         transform.localScale = Vector3.one * scale;
     }
 
-	public void Smash (bool doubleSmash)
-	{
+    public void Smash(bool doubleSmash)
+    {
         smashCounter++;
         if (doubleSmash)
         {
@@ -219,8 +231,8 @@ public class PassiveCharacterController : MonoBehaviour
         transform.localScale = Vector3.one * normalScale;
     }
 
-	public void ResetSmash()
-	{
+    public void ResetSmash()
+    {
         smashCounter = 0;
 
         meshRenderer.material = smashMaterials[0];
@@ -241,7 +253,7 @@ public class PassiveCharacterController : MonoBehaviour
         }
         foreach (GameObject toBeRespawned in smashObs)
         {
-            if(toBeRespawned.GetComponent<BoxCollider>() != null) toBeRespawned.GetComponent<BoxCollider>().enabled = true;
+            if (toBeRespawned.GetComponent<BoxCollider>() != null) toBeRespawned.GetComponent<BoxCollider>().enabled = true;
             toBeRespawned.GetComponent<MeshRenderer>().enabled = true;
             GameObject remains = GameObject.Find(toBeRespawned.name + " Remains");
             if (remains != null) remains.GetComponent<BreakScript>().cleanUp();
@@ -266,7 +278,7 @@ public class PassiveCharacterController : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         Collider collider = collision.collider;
-        if (collider.tag == "Smashable"  && smashCounter > 0)
+        if (collider.tag == "Smashable" && smashCounter > 0)
         {
             collider.gameObject.GetComponent<BoxCollider>().enabled = false;
             collider.gameObject.GetComponent<MeshRenderer>().enabled = false;

@@ -95,6 +95,23 @@ public class ClientUIController : MonoBehaviour
     {
         if (buttonText != null)
         {
+            InteractivateAllButtons();
+
+            var button = buttonText.GetComponentInParent<Button>();
+            if (button != null)
+            {
+                var colors = new ColorBlock()
+                {
+                    normalColor = button.colors.normalColor,
+                    highlightedColor = button.colors.highlightedColor,
+                    disabledColor = Color.yellow,
+                    pressedColor = button.colors.pressedColor,
+                    colorMultiplier = 1
+                };
+                button.GetComponent<Button>().colors = colors;
+                button.interactable = false;
+            }
+
             InputManager.SingleInputType inputType;
 
             switch (buttonText.text)
@@ -121,6 +138,16 @@ public class ClientUIController : MonoBehaviour
                 networkPlayer.GetComponent<NetworkPlayerController>().SetPlayerInput(inputType);
             }
         }
+    }
+
+    public void InteractivateAllButtons()
+    {
+        _clientGameUI.GetComponent<ClientGameUIController>().InteractivateAllButtons();
+    }
+
+    public void DisableAllButtons()
+    {
+        _clientGameUI.GetComponent<ClientGameUIController>().DisableAllButtons();
     }
 
     private void Update()

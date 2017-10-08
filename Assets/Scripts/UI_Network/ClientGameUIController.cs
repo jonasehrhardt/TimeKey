@@ -8,6 +8,9 @@ public class ClientGameUIController : MonoBehaviour
     [SerializeField]
     private GameObject _dummyButton;
 
+    [SerializeField]
+    private List<Button> _buttonList;
+
     private List<GameObject> _buttons = new List<GameObject>();
 
     public class ButtonSettings
@@ -42,6 +45,37 @@ public class ClientGameUIController : MonoBehaviour
             };
             button.GetComponent<Button>().colors = colors;
             _buttons.Add(button);
+        }
+    }
+
+    public void InteractivateAllButtons()
+    {
+        if(_buttonList != null)
+        {
+            foreach(var button in _buttonList)
+            {
+                button.interactable = true;
+            }
+        }
+    }
+
+    public void DisableAllButtons()
+    {
+        if (_buttonList != null)
+        {
+            foreach (var button in _buttonList)
+            {
+                var colors = new ColorBlock()
+                {
+                    normalColor = button.colors.normalColor,
+                    highlightedColor = button.colors.highlightedColor,
+                    disabledColor = Color.grey,
+                    pressedColor = button.colors.pressedColor,
+                    colorMultiplier = 1
+                };
+                button.GetComponent<Button>().colors = colors;
+                button.interactable = false;
+            }
         }
     }
 

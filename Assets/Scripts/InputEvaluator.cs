@@ -10,6 +10,8 @@ public class InputEvaluator : MonoBehaviour
             InputManager.CombinedInputType currentInputType = GameManager.instance.inputManager.getCurrentInput();
             //Debug.Log(currentInputType);
 
+            GameManager.instance.ShowWaitToPressAButtonText();
+
             //Do Action depending on player input
             switch (currentInputType)
             {

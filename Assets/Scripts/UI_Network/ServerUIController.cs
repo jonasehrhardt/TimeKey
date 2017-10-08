@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -112,6 +113,30 @@ public class ServerUIController : MonoBehaviour
     {
         if (_serverGameUIController != null)
             _serverGameUIController.ChangeGameTimeText(time);
+    }
+
+    public void ChangeButtonsPressedText(string firstButton, string secondButton)
+    {
+        if (_serverGameUIController != null)
+            _serverGameUIController.ChangeButtonsPressedText(firstButton, secondButton);
+    }
+
+    internal void ShowWaitToPressAButtonText()
+    {
+        if (_serverGameUIController != null)
+            _serverGameUIController.ShowWaitToPressAButtonText();
+    }
+
+    internal void ShowNoInputText()
+    {
+        if (_serverGameUIController != null)
+            _serverGameUIController.ShowNoInputText();
+    }
+
+    public void ShowPressNowText()
+    {
+        if (_serverGameUIController != null)
+            _serverGameUIController.ShowPressNowText();
     }
 
     void Awake()

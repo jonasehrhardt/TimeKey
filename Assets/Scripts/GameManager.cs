@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public int currentPoints = 0;
     private float gameStartTime = 0;
     private int _highscore;
-	private GameObject[] lifeBar;
+    private GameObject[] lifeBar;
 
     private ServerUIController _serverUIController;
 
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public LevelManager levelManager;
-        
+
     private int deathCount = 0;
 
     private void Awake()
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = minTimeScale;
 
-		lifeBar = new GameObject[] {GameObject.Find("Life1"), GameObject.Find("Life2"), GameObject.Find("Life3")};
+        lifeBar = new GameObject[] { GameObject.Find("Life1"), GameObject.Find("Life2"), GameObject.Find("Life3") };
         //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
 
@@ -137,21 +137,68 @@ public class GameManager : MonoBehaviour
         characterStartingPosition = newPosition;
     }
 
+    private string firstPlayerInput;
+    private string secondPlayerInput;
+
+    public void UpdateButtonPressedUI(int playerNumber, InputManager.SingleInputType type)
+    {
+        if (_serverUIController != null)
+        {
+            if (playerNumber == 0)
+                firstPlayerInput = type.ToString();
+            else
+                secondPlayerInput = type.ToString();
+
+            _serverUIController.ChangeButtonsPressedText(firstPlayerInput, secondPlayerInput);
+        }
+    }
+
+    public void ClearButtonsPressedUI()
+    {
+        firstPlayerInput = string.Empty;
+        secondPlayerInput = string.Empty;
+        _serverUIController.ChangeButtonsPressedText(firstPlayerInput, secondPlayerInput);
+    }
+
+    public void ShowWaitToPressAButtonText()
+    {
+        ClearButtonsPressedUI();
+        if (_serverUIController != null)
+            _serverUIController.ShowWaitToPressAButtonText();
+    }
+
+    public void ShowNoInputText()
+    {
+        ClearButtonsPressedUI();
+        if (_serverUIController != null)
+            _serverUIController.ShowNoInputText();
+    }
+
+    public void ShowPressNowText()
+    {
+        ClearButtonsPressedUI();
+        if (_serverUIController != null)
+            _serverUIController.ShowPressNowText();
+    }
+
     public void Death()
     {
         deathCount++;
-		if (SceneManager.GetActiveScene ().name == "Game") {
-			lifeBar [3 - deathCount].GetComponent<MeshRenderer> ().enabled = false;
-			if (deathCount == 3) {
-				deathCount = 0;
-				ResetLevel ();
-				SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
-				for (int i = 0; i < 3; i++)
-					lifeBar [i].GetComponent<MeshRenderer> ().enabled = true;
-			}	
-		} else {
-			deathCount = 0;
-		}
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            lifeBar[3 - deathCount].GetComponent<MeshRenderer>().enabled = false;
+            if (deathCount == 3)
+            {
+                deathCount = 0;
+                ResetLevel();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                for (int i = 0; i < 3; i++)
+                    lifeBar[i].GetComponent<MeshRenderer>().enabled = true;
+            }
+        }
+        else
+        {
+            deathCount = 0;
+        }
     }
 }
-	

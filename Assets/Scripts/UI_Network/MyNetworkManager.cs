@@ -193,8 +193,6 @@ public class MyNetworkManager : NetworkManager
             _clientUIController.HideClientGameUI();
         }
 
-        
-
         if (networkAddress != null && networkAddress != string.Empty)
             if (_isHost)
             {
@@ -211,8 +209,6 @@ public class MyNetworkManager : NetworkManager
     public void ChangeNetworkAdress(Text text)
     {
         networkAddress = text.text;
-
-
     }
 
     public void ToggleChangeNetworkAdress()
