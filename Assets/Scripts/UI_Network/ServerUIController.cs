@@ -152,4 +152,14 @@ public class ServerUIController : MonoBehaviour
     {
         
     }
+
+	public int UIStatus()
+	{
+		if (_serverWaitUI.activeSelf)
+			return 1;
+		else if (_serverGameUI.activeSelf)
+			return 2;
+		else
+			return 0;
+	}
 }

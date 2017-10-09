@@ -120,4 +120,9 @@ public class LevelManager : MonoBehaviour
             GameManager.instance.levelManager = null;
         }
     }
+
+	public void restart()
+	{
+		Start ();
+	}
 }
