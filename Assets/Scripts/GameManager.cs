@@ -52,9 +52,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = minTimeScale;
 
-		if (SceneManager.GetActiveScene ().name == "Game" || (SceneManager.GetActiveScene ().name == "Server" && activeGame)) {
-			lifeBar = new GameObject[] { GameObject.Find ("Life1"), GameObject.Find ("Life2"), GameObject.Find ("Life3") };
-		}
+		lifeBar = new GameObject[] { GameObject.Find ("Life1"), GameObject.Find ("Life2"), GameObject.Find ("Life3") };
         //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
 
