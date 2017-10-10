@@ -88,9 +88,9 @@ public class GameManager : MonoBehaviour
             gameStartTime += Time.deltaTime;
             _serverUIController.ChangeGameTimeText(gameStartTime);
             _serverUIController.SetHighscore(_highscore);
+            if (_serverUIController.UIStatus() == 1)
+                activeGame = false;
         }
-		if (_serverUIController.UIStatus () == 1)
-			activeGame = false;
     }
 
     public void ResetLevel()
