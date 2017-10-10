@@ -52,7 +52,9 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = minTimeScale;
 
-        lifeBar = new GameObject[] { GameObject.Find("Life1"), GameObject.Find("Life2"), GameObject.Find("Life3") };
+		if (SceneManager.GetActiveScene ().name == "Game" || (SceneManager.GetActiveScene ().name == "Server" && activeGame)) {
+			lifeBar = new GameObject[] { GameObject.Find ("Life1"), GameObject.Find ("Life2"), GameObject.Find ("Life3") };
+		}
         //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
 
@@ -220,8 +222,10 @@ public class GameManager : MonoBehaviour
         else
         {
             deathCount = 0;
-			for (int i = 0; i < 3; i++)
-				lifeBar[i].GetComponent<MeshRenderer>().enabled = true;
+			if (SceneManager.GetActiveScene ().name == "Game" || (SceneManager.GetActiveScene ().name == "Server" && activeGame)) {
+				for (int i = 0; i < 3; i++)
+					lifeBar [i].GetComponent<MeshRenderer> ().enabled = true;
+			}
 			if (_serverUIController != null)
 			{
 				_serverUIController.ChangeGamePointsText(0);
