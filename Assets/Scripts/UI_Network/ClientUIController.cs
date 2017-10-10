@@ -14,6 +14,9 @@ public class ClientUIController : MonoBehaviour
     [SerializeField]
     private GameObject _clientGameUI;
 
+    [SerializeField]
+    private GameObject _skipTutorialButton;
+
     public Text ConnectionPasswordText;
     public InputField ConnectionPasswordInputField;
 
@@ -45,6 +48,9 @@ public class ClientUIController : MonoBehaviour
     {
         if (_clientGameUI != null)
             _clientGameUI.SetActive(true);
+
+        if (_skipTutorialButton != null)
+            _skipTutorialButton.SetActive(true);
     }
 
     public void HideClientGameUI()
@@ -137,6 +143,24 @@ public class ClientUIController : MonoBehaviour
             {
                 networkPlayer.GetComponent<NetworkPlayerController>().SetPlayerInput(inputType);
             }
+        }
+    }
+
+    public void SkipTutorial()
+    {
+        foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
+        {
+            networkPlayer.GetComponent<NetworkPlayerController>().SetSkipTutorial();
+        }
+
+        DisableAllButtons();
+    }
+
+    public void DisableSkipTutorialButton()
+    {
+        if(_skipTutorialButton != null)
+        {
+            _skipTutorialButton.SetActive(false);
         }
     }
 

@@ -16,24 +16,23 @@ public class MyNetworkManager : NetworkManager
 
     private List<NetworkConnection> _currentPlayers = new List<NetworkConnection>();
     private List<NetworkConnection> _readyPlayers = new List<NetworkConnection>();
+    private List<NetworkConnection> _playersWantToSkipTutorial = new List<NetworkConnection>();
 
     public int ReadyPlayerCount { get { return _readyPlayers.Count; } }
 
     public override void OnClientConnect(NetworkConnection conn)
     {
-        base.OnClientConnect(conn);
-
         if (_clientUIController != null)
         {
             _clientUIController.HideWaitUI();
             _clientUIController.ShowClientConnectionUI();
         }
+
+        base.OnClientConnect(conn);
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
     {
-        base.OnClientDisconnect(conn);
-
         if (_clientUIController != null)
         {
             _clientUIController.HideClientGameUI();
@@ -43,6 +42,8 @@ public class MyNetworkManager : NetworkManager
         }
 
         StartClient();
+
+        base.OnClientDisconnect(conn);
     }
 
     public override void OnServerConnect(NetworkConnection conn)
@@ -82,6 +83,23 @@ public class MyNetworkManager : NetworkManager
                 StartServerGame();
             }
         }
+    }
+
+    public bool ClientWantToSkipTutorial(NetworkConnection conn)
+    {
+        if (_currentPlayers.Exists(c => c.connectionId == conn.connectionId)
+            && !_playersWantToSkipTutorial.Exists(c => c.connectionId == conn.connectionId))
+        {
+            _playersWantToSkipTutorial.Add(conn);
+
+            if (_playersWantToSkipTutorial.Count >= 2)
+            {
+                SkipTutorialGame();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public override void OnServerReady(NetworkConnection conn)
@@ -125,6 +143,22 @@ public class MyNetworkManager : NetworkManager
                 networkPlayer.GetComponent<NetworkPlayerController>().StartClientGame();
             }
         }
+
+        LoadTutorial();
+    }
+
+    private void LoadTutorial()
+    {
+        SceneManager.UnloadSceneAsync(1);
+
+        SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+    }
+
+    private void SkipTutorialGame()
+    {
+        SceneManager.UnloadSceneAsync(2);
+
+        SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

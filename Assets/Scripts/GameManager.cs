@@ -157,7 +157,10 @@ public class GameManager : MonoBehaviour
     {
         firstPlayerInput = string.Empty;
         secondPlayerInput = string.Empty;
-        _serverUIController.ChangeButtonsPressedText(firstPlayerInput, secondPlayerInput);
+        if (_serverUIController != null)
+        {
+            _serverUIController.ChangeButtonsPressedText(firstPlayerInput, secondPlayerInput);
+        }
     }
 
     public void ShowWaitToPressAButtonText()

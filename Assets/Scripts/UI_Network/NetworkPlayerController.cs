@@ -45,6 +45,17 @@ public class NetworkPlayerController : NetworkBehaviour
         }
     }
 
+    public void SetSkipTutorial()
+    {
+        Debug.Log("skipppp");
+        if (isLocalPlayer && !isServer && isClient)
+        {
+            Debug.Log("skip");
+
+            CmdSetSkipTutorial(_playerNumber);
+        }
+    }
+
     public void SlowMoFieldBegins()
     {
         if (isServer)
@@ -98,6 +109,8 @@ public class NetworkPlayerController : NetworkBehaviour
         {
             _clientUIController.HideClientWaitUI();
             _clientUIController.ShowClientGameUI();
+
+            _clientUIController.DisableAllButtons();
         }
 
     }
@@ -146,6 +159,24 @@ public class NetworkPlayerController : NetworkBehaviour
             {
                 passiveCharController.SetInputType(playerNumber, type);
             }
+        }
+    }
+
+    [Command]
+    public void CmdSetSkipTutorial(int playerNumber)
+    {
+        if(_networkManager.ClientWantToSkipTutorial(connectionToClient))
+        {
+            RpcDisableSkipTutorialButton();
+        }
+    }
+
+    [ClientRpc]
+    public void RpcDisableSkipTutorialButton()
+    {
+        if(_clientUIController != null)
+        {
+            _clientUIController.DisableSkipTutorialButton();
         }
     }
 
