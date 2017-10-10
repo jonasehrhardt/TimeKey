@@ -58,7 +58,7 @@ public class NetworkPlayerController : NetworkBehaviour
 
     public void SlowMoFieldBegins()
     {
-        if (isServer)
+        if (isServer && (_networkManager.ReadyPlayerCount == 2))
         {
             TargetSlowMoFieldBegins(connectionToClient);
         }
