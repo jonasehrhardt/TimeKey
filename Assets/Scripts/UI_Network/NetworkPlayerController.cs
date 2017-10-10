@@ -39,7 +39,7 @@ public class NetworkPlayerController : NetworkBehaviour
 
     public void SetPlayerInput(InputManager.SingleInputType type)
     {
-        if(isLocalPlayer && !isServer && isClient)
+        if (isLocalPlayer && !isServer && isClient)
         {
             CmdSetPlayerInput(_playerNumber, type);
         }
@@ -118,7 +118,7 @@ public class NetworkPlayerController : NetworkBehaviour
     [TargetRpc]
     public void TargetSlowMoFieldOver(NetworkConnection conn)
     {
-        if(_clientUIController != null)
+        if (_clientUIController != null)
         {
             _clientUIController.DisableAllButtons();
         }
@@ -152,30 +152,40 @@ public class NetworkPlayerController : NetworkBehaviour
         Debug.Log("CmdSetPlayerInput: " + type.ToString());
 
         var playerObject = GameObject.FindGameObjectWithTag("Player");
-        if(playerObject != null)
+        if (playerObject != null)
         {
             var passiveCharController = playerObject.GetComponent<PassiveCharacterController>();
-            if(passiveCharController != null)
+            if (passiveCharController != null)
             {
                 passiveCharController.SetInputType(playerNumber, type);
             }
         }
     }
 
+    public void DisableSkipTutorialButton()
+    {
+        TargetDisableSkipTutorialButton(connectionToClient);
+    }
+
     [Command]
     public void CmdSetSkipTutorial(int playerNumber)
     {
-        if(_networkManager.ClientWantToSkipTutorial(connectionToClient))
+        if (_networkManager.ClientWantToSkipTutorial(connectionToClient))
         {
-            RpcDisableSkipTutorialButton();
+            foreach (var networkPlayer in GameObject.FindGameObjectsWithTag("NetworkPlayer"))
+            {
+                networkPlayer.GetComponent<NetworkPlayerController>().DisableSkipTutorialButton();
+            }
         }
     }
 
-    [ClientRpc]
-    public void RpcDisableSkipTutorialButton()
+    [TargetRpc]
+    public void TargetDisableSkipTutorialButton(NetworkConnection conn)
     {
-        if(_clientUIController != null)
+        Debug.Log("!!skip button off");
+        if (_clientUIController != null)
         {
+            Debug.Log("skip button off");
             _clientUIController.DisableSkipTutorialButton();
         }
     }

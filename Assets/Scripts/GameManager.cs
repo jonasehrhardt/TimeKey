@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     private float gameStartTime = 0;
     private int _highscore;
     private GameObject[] lifeBar;
-	private bool activeGame = false;
+    private bool activeGame = false;
 
     private ServerUIController _serverUIController;
 
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = minTimeScale;
 
-		lifeBar = new GameObject[] { GameObject.Find ("Life1"), GameObject.Find ("Life2"), GameObject.Find ("Life3") };
+        lifeBar = new GameObject[] { GameObject.Find("Life1"), GameObject.Find("Life2"), GameObject.Find("Life3") };
         //Debug.Log("Starting GameManager");
         inputManager = new InputManager();
 
@@ -88,9 +88,9 @@ public class GameManager : MonoBehaviour
             gameStartTime += Time.deltaTime;
             _serverUIController.ChangeGameTimeText(gameStartTime);
             _serverUIController.SetHighscore(_highscore);
-						if (_serverUIController.UIStatus () == 1) activeGame = false;
+            if (_serverUIController.UIStatus() == 1) activeGame = false;
 
-				}
+        }
     }
 
     public void ResetLevel()
@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
                 secondPlayerInput = type.ToString();
 
             _serverUIController.ChangeButtonsPressedText(firstPlayerInput, secondPlayerInput);
-			activeGame = true;
+            activeGame = true;
         }
     }
 
@@ -190,52 +190,53 @@ public class GameManager : MonoBehaviour
 
     public void Death()
     {
-		deathCount++;
-		if (SceneManager.GetActiveScene().name == "Game" || (SceneManager.GetActiveScene().name == "Server" && activeGame)  ) 
+        deathCount++;
+        if (SceneManager.GetActiveScene().name == "Game" || (SceneManager.GetActiveScene().name == "Server" && activeGame))
         {
             lifeBar[3 - deathCount].GetComponent<MeshRenderer>().enabled = false;
             if (deathCount == 3)
             {
                 deathCount = 0;
-				if (_serverUIController != null)
-				{
-					_serverUIController.ChangeGamePointsText(0);
-					_serverUIController.ChangeGameTimeText(0);
-				}
-				Time.timeScale = minTimeScale;
-				if (!pcharacter.useAI && currentPoints > _highscore)
-				{
-					_highscore = currentPoints;
-					PlayerPrefs.SetInt("highscore", _highscore);
-				}
-				currentPoints = 0;
-				for (int i = 0; i < 3; i++)
-					lifeBar[i].GetComponent<MeshRenderer>().enabled = true;
-				if (SceneManager.GetActiveScene ().name == "Game")
-					SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
-				else
-					levelManager.restart ();	    
+                if (_serverUIController != null)
+                {
+                    _serverUIController.ChangeGamePointsText(0);
+                    _serverUIController.ChangeGameTimeText(0);
+                }
+                Time.timeScale = minTimeScale;
+                if (!pcharacter.useAI && currentPoints > _highscore)
+                {
+                    _highscore = currentPoints;
+                    PlayerPrefs.SetInt("highscore", _highscore);
+                }
+                currentPoints = 0;
+                for (int i = 0; i < 3; i++)
+                    lifeBar[i].GetComponent<MeshRenderer>().enabled = true;
+                if (SceneManager.GetActiveScene().name == "Game")
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                else
+                    levelManager.restart();
             }
         }
         else
         {
             deathCount = 0;
-			if (SceneManager.GetActiveScene ().name == "Game" || (SceneManager.GetActiveScene ().name == "Server" && activeGame)) {
-				for (int i = 0; i < 3; i++)
-					lifeBar [i].GetComponent<MeshRenderer> ().enabled = true;
-			}
-			if (_serverUIController != null)
-			{
-				_serverUIController.ChangeGamePointsText(0);
-				_serverUIController.ChangeGameTimeText(0);
-			}
-			Time.timeScale = minTimeScale;
-			if (!pcharacter.useAI && currentPoints > _highscore)
-			{
-				_highscore = currentPoints;
-				PlayerPrefs.SetInt("highscore", _highscore);
-			}
-			currentPoints = 0;
+            if (SceneManager.GetActiveScene().name == "Game" || (SceneManager.GetActiveScene().name == "Server" && activeGame))
+            {
+                for (int i = 0; i < 3; i++)
+                    lifeBar[i].GetComponent<MeshRenderer>().enabled = true;
+            }
+            if (_serverUIController != null)
+            {
+                _serverUIController.ChangeGamePointsText(0);
+                _serverUIController.ChangeGameTimeText(0);
+            }
+            Time.timeScale = minTimeScale;
+            if (!pcharacter.useAI && currentPoints > _highscore)
+            {
+                _highscore = currentPoints;
+                PlayerPrefs.SetInt("highscore", _highscore);
+            }
+            currentPoints = 0;
         }
     }
 
